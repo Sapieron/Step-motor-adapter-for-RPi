@@ -1,0 +1,37 @@
+{
+    "cmake.buildDirectory": "${workspaceRoot}/build",
+    "cmake.buildArgs": [
+        "--parallel"
+    ],
+    "cmake.autoRestartBuild": true,
+    "cmake.saveBeforeBuild": true,
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.workspaceParsingPriority": "medium",
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "googletest.failed",
+                "settings": {
+                    "foreground": "#f00"
+                }
+            },
+            {
+                "scope": "googletest.passed",
+                "settings": {
+                    "foreground": "#0f0"
+                }
+            },
+            {
+                "scope": "googletest.run",
+                "settings": {
+                    "foreground": "#0f0"
+                }
+            }
+        ]
+    },
+    "files.associations": {
+        "main.h": "c",
+        "stm32f1xx_hal.h": "c"
+    }
+}

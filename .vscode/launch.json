@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "./bin/executable.elf",
+            "name": "Debug OpenOCD",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd"
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/executable.elf",
+            "name": "Debug (J-Link)",
+            "device": "STM32F103CBT6",
+            "interface": "swd",
+            "serialNumber": "null",
+            "svdFile": "./STM32F103xx.svd",
+            "postLaunchCommands": [
+                "b main",
+                "continue",
+            ],
+        },
+    ]
+}
