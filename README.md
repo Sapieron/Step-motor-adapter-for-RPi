@@ -3,17 +3,22 @@ Step motor adapter for RPi-standard minicomputers
 
 #Tools used
 TODO ADD LINKS DOWN HERE
--Embedded C++
+-Visual Studio Code (IDE)
+-Embedded C++17
+-Embedded C11
 -Google Test
 -CMake (build tool)
 -Ninja (generator)
--ARM GNU Embedded Toolchain(C, CPP and ASM compilers)
--Visual Studio Code (IDE)
+-ARM GNU Embedded Toolchain(GCC, GPP and ASM compilers)
+-CppCheck to check compliance with MISRA
+
 Extensions used for VSCode:
--to
--do
--that
--list
+-CMake tools
+-GoogleTest Adapter
+-ARM [ARM support for Visual Studio Code]
+-Cortex-Debug [Usage shown here https://marcelball.ca/projects/cortex-debug/cortex-debug-launch-configurations/]
+-LinkerScript [adds GNU linker script support]
+
 #Configuring the environment
 In order to build the project
 
