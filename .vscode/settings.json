@@ -1,4 +1,6 @@
 {
+    "editor.rulers": [80],
+    "cortex-debug.JLinkGDBServerPath": "D:/WINDOWS_DATA/Folder Files/SEGGER/JLink/JLinkGDBServerCL.exe",
     "cmake.buildDirectory": "${workspaceRoot}/build",
     "cmake.buildArgs": [
         "--parallel"
@@ -32,6 +34,12 @@
     },
     "files.associations": {
         "main.h": "c",
-        "stm32f1xx_hal.h": "c"
-    }
+        "stm32f1xx_hal.h": "c",
+        "stm32f1xx.h": "c",
+        "algorithm": "cpp",
+        "chrono": "cpp",
+        "limits": "cpp",
+        "cstdint": "cpp"
+    },
+    "C_Cpp.default.includePath": ["D:/WINDOWS_DATA/Cygwin/usr/include"]
 }

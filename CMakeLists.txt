@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
-set(OUTPUT_FILE_NAME "executable")
+set(OUTPUT_FILE_NAME "firmware")
 
 if(NOT CMAKE_BUILD_TYPE)
     message(STATUS "CMAKE_BUILD_TYPE not set, defaulting to DEBUG")
@@ -33,6 +33,7 @@ add_executable(${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME}
     PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/src"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/mcal/stm32f100"
 )
 
 target_sources(${PROJECT_NAME}
@@ -53,12 +54,11 @@ set_target_properties(${PROJECT_NAME}
 
 target_compile_options(${PROJECT_NAME}
     PRIVATE
+        -x c++
         -Wall
         -Wextra
         -Wpedantic
-#        -Werror
-        -Wstrict-prototypes
-        -Wmissing-prototypes
+        -Werror
         -Wduplicated-cond
         -Wduplicated-branches
         -Wlogical-op
@@ -73,14 +73,6 @@ target_compile_options(${PROJECT_NAME}
 #         ${PROJECT_NAME}-hal
 # )
 
-if(RTT_LOG)
-    add_subdirectory(libs/rtt)
-    target_link_libraries(${PROJECT_NAME}
-        PRIVATE
-            rtt
-    )
-endif()
-
 
 target_link_options(${PROJECT_NAME}
     PRIVATE
@@ -88,7 +80,7 @@ target_link_options(${PROJECT_NAME}
 )
 
 utils_target_set_linker_script(${PROJECT_NAME}
-    ${CMAKE_CURRENT_SOURCE_DIR}/link.ld
+    ${CMAKE_CURRENT_SOURCE_DIR}/target/micro/stm32f100/linkerconfig/stm32f100.ld
 )
 
 utils_target_generate_hex(${PROJECT_NAME})

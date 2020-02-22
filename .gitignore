@@ -1,6 +1,3 @@
-*.jdebug.user
-
-/.idea/
 /build/
 
 /.vscode/*
