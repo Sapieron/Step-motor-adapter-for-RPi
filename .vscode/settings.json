@@ -39,7 +39,8 @@
         "algorithm": "cpp",
         "chrono": "cpp",
         "limits": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "stm32f1xx_hal_conf.h": "c"
     },
     "C_Cpp.default.includePath": ["D:/WINDOWS_DATA/Cygwin/usr/include"]
 }

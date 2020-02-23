@@ -33,7 +33,8 @@ add_executable(${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME}
     PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/src"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/mcal/stm32f100"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/mcu/include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/payload/include"
 )
 
 target_sources(${PROJECT_NAME}
@@ -68,10 +69,10 @@ target_compile_options(${PROJECT_NAME}
         -Wsign-conversion
 )
 
-# target_link_libraries(${PROJECT_NAME}
-#     PRIVATE
-#         ${PROJECT_NAME}-hal
-# )
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        ${PROJECT_NAME}-hal
+)
 
 
 target_link_options(${PROJECT_NAME}
@@ -80,7 +81,7 @@ target_link_options(${PROJECT_NAME}
 )
 
 utils_target_set_linker_script(${PROJECT_NAME}
-    ${CMAKE_CURRENT_SOURCE_DIR}/target/micro/stm32f100/linkerconfig/stm32f100.ld
+    ${CMAKE_CURRENT_SOURCE_DIR}/drivers/drivers/external/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/linker/STM32F103XB_FLASH.ld
 )
 
 utils_target_generate_hex(${PROJECT_NAME})

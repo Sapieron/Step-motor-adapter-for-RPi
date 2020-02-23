@@ -6,4 +6,5 @@ int main(void)
 	{
     //Add main code
 	}
+	return 0;
 }
