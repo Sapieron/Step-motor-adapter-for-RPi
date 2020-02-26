@@ -19,7 +19,7 @@
   UseAdaptive0 = 0
   UseAdaptive1 = 0
   UseMaxSpeed0 = 1
-  UseMaxSpeed1 = 0
+  UseMaxSpeed1 = 1
 [CPU]
   NumInitSteps = 1
   InitStep0_Action = "Reset"

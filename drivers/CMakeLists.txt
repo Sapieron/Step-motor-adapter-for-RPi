@@ -1,10 +1,12 @@
 file(GLOB_RECURSE HAL_HEADERS CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
 )
 
 file(GLOB_RECURSE HAL_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/*.c
     ${CMAKE_CURRENT_SOURCE_DIR}/*.s
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
 )
 
 add_library(${PROJECT_NAME}-hal OBJECT)
@@ -13,6 +15,7 @@ target_include_directories(${PROJECT_NAME}-hal
     SYSTEM PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/drivers/external/CMSIS/Device/ST/STM32F1xx/Include
         ${CMAKE_CURRENT_SOURCE_DIR}/drivers/external/STM32F1xx_HAL_Driver/Inc
+        ${CMAKE_CURRENT_SOURCE_DIR}/drivers/external/STM32F1xx_HAL_Driver/Src
         ${CMAKE_CURRENT_SOURCE_DIR}/drivers/external/CMSIS/Core/Include
 )
 

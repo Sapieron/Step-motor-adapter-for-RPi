@@ -40,7 +40,9 @@
         "chrono": "cpp",
         "limits": "cpp",
         "cstdint": "cpp",
-        "stm32f1xx_hal_conf.h": "c"
+        "stm32f1xx_hal_conf.h": "c",
+        "stm32f103xb.h": "c",
+        "core_cm3.h": "c"
     },
     "C_Cpp.default.includePath": ["D:/WINDOWS_DATA/Cygwin/usr/include"]
 }
