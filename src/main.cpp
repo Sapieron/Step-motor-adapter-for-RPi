@@ -1,25 +1,44 @@
+/**
+ * @file main.cpp
+ * @author https://github.com/Sapieron
+ * @brief Main application - this is where we start right after
+ * 		  startup_stm32f103xb.s
+ * @version 0.1
+ * @date 2020-03-03
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #include <cstdint>
-#include <stdint.h>
-#include <stm32f1xx_hal_rcc.h>
-#include <stm32f1xx_hal_gpio.h>
-#include <stm32f1xx_hal.h>
-#include <stm32f1xx.h>
-#include <system_stm32f1xx.h>
+
+#include "stm32f1xx_hal.h"
+#include "stm32f1xx.h"
+#include "system_stm32f1xx.h"
+
+#include "gpio/forward.hpp"
+#include "mcu/board.hpp"
+
+/**
+ * @brief Instance of Board. Delivers access to peripherals
+ * 		  and other //TODO what is ,,other?"
+ */
+BOARD Main;
+
+void SetupHardware()
+{
+	__HAL_RCC_GPIOA_CLK_ENABLE();      //FIXME make it pretty!
+	//GPIO_PinModeSet(io_map::XTAL::HF::Pin1::Port, io_map::XTAL::HF::Pin1::PinNumber, );
+	Main.Hardware.Initialize();
+}
 
 int main(void)
 {
 	HAL_Init();
-	__HAL_RCC_GPIOA_CLK_ENABLE();
+	SetupHardware();
 
-	GPIO_InitTypeDef gpio;
-	gpio.Pin = GPIO_PIN_0;
-	gpio.Mode = GPIO_MODE_OUTPUT_PP;
-	gpio.Pull = GPIO_NOPULL;
-	gpio.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOA, &gpio);
-
-	while (1)
+	while(1)
 	{
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET); // zapalenie diody
+		Main.Hardware.Pins.LedCommOk.High();
 	}
 }

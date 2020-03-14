@@ -14,8 +14,6 @@ project(${OUTPUT_FILE_NAME} C CXX ASM)
 
 include(cmake/utils.cmake)
 
-option(RTT_LOG "Enable RTT logs" OFF)
-
 add_subdirectory(drivers)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
@@ -26,6 +24,14 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.s
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.hxx
+    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.cxx
+    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.s
 )
 
 add_executable(${PROJECT_NAME})
@@ -35,6 +41,10 @@ target_include_directories(${PROJECT_NAME}
         "${CMAKE_CURRENT_SOURCE_DIR}/src"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/mcu/include"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/payload/include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/inc"
+        "${CMAKE_CURRENT_SOURCE_DIR}/libraries/i2c/inc"
+        "${CMAKE_CURRENT_SOURCE_DIR}/libraries/uart/inc"
+        "${CMAKE_CURRENT_SOURCE_DIR}/libraries"
 )
 
 target_sources(${PROJECT_NAME}
@@ -48,7 +58,7 @@ set_target_properties(${PROJECT_NAME}
         C_STANDARD 11
         C_EXTENSIONS ON
         CMAKE_C_STANDARD_REQUIRED ON
-        CXX_STANDARD 17
+        CXX_STANDARD 20
         CXX_EXTENSIONS ON
         CMAKE_CXX_STANDARD_REQUIRED ON
 )
@@ -59,7 +69,6 @@ target_compile_options(${PROJECT_NAME}
         -Wall
         -Wextra
         -Wpedantic
-        -Werror
         -Wduplicated-cond
         -Wduplicated-branches
         -Wlogical-op
@@ -67,13 +76,13 @@ target_compile_options(${PROJECT_NAME}
         -Wshadow
         -Wconversion
         -Wsign-conversion
+        -O0
 )
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         ${PROJECT_NAME}-hal
 )
-
 
 target_link_options(${PROJECT_NAME}
     PRIVATE

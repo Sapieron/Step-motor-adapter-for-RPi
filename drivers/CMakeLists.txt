@@ -17,6 +17,8 @@ target_include_directories(${PROJECT_NAME}-hal
         ${CMAKE_CURRENT_SOURCE_DIR}/drivers/external/STM32F1xx_HAL_Driver/Inc
         ${CMAKE_CURRENT_SOURCE_DIR}/drivers/external/STM32F1xx_HAL_Driver/Src
         ${CMAKE_CURRENT_SOURCE_DIR}/drivers/external/CMSIS/Core/Include
+        ${CMAKE_CURRENT_SOURCE_DIR}/drivers/templates/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/drivers
 )
 
 target_compile_definitions(${PROJECT_NAME}-hal
@@ -30,4 +32,3 @@ target_sources(${PROJECT_NAME}-hal
     PRIVATE
         ${HAL_SOURCES}
 )
-
