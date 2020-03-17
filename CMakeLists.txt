@@ -15,6 +15,7 @@ project(${OUTPUT_FILE_NAME} C CXX ASM)
 include(cmake/utils.cmake)
 
 add_subdirectory(drivers)
+add_subdirectory(libraries)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
@@ -24,14 +25,6 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.s
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.hxx
-    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.cxx
-    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/*.s
 )
 
 add_executable(${PROJECT_NAME})
@@ -41,10 +34,6 @@ target_include_directories(${PROJECT_NAME}
         "${CMAKE_CURRENT_SOURCE_DIR}/src"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/mcu/include"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/payload/include"
-        "${CMAKE_CURRENT_SOURCE_DIR}/libraries/gpio/inc"
-        "${CMAKE_CURRENT_SOURCE_DIR}/libraries/i2c/inc"
-        "${CMAKE_CURRENT_SOURCE_DIR}/libraries/uart/inc"
-        "${CMAKE_CURRENT_SOURCE_DIR}/libraries"
 )
 
 target_sources(${PROJECT_NAME}
@@ -82,6 +71,8 @@ target_compile_options(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         ${PROJECT_NAME}-hal
+        gpio
+        uart
 )
 
 target_link_options(${PROJECT_NAME}

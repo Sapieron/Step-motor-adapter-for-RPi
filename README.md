@@ -33,3 +33,4 @@ svd file for desired processor or rather use stcubemx to download latest
 - during instalation set ,,add to path variable"
 
 C:\Users\Pawel\STM32Cube\Repository\STM32Cube_FW_F1_V1.8.0\Drivers <- STEROWNIKI SĄ STĄD <- POBRANE PRZEZ CUBEMX
+https://github.com/google/googletest/blob/master/googletest/README.md <- googletest zintegrowany zgodnie z tym

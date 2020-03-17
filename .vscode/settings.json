@@ -117,5 +117,10 @@
         "valarray": "cpp",
         "variant": "cpp"
     },
-    "C_Cpp.default.includePath": ["D:/WINDOWS_DATA/Cygwin/usr/include"]
+    "C_Cpp.default.includePath": [
+        "D:/WINDOWS_DATA/Cygwin/usr/include"
+    ],
+    "gtest-adapter.debugConfig": [
+        "Cortex Debug"
+    ]
 }
