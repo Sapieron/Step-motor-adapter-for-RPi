@@ -1,3 +1,8 @@
 add_subdirectory(external)
 add_subdirectory(gpio)
 add_subdirectory(uart)
+add_subdirectory(terminal)
+add_subdirectory(base)
+add_subdirectory(board)
+add_subdirectory(drivers)
+add_subdirectory(i2c)

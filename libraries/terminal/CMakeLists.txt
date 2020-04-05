@@ -1,4 +1,4 @@
-set(NAME uart)
+set(NAME terminal)
 
 set(SOURCES
     driver.cpp

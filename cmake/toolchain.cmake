@@ -1,52 +1,37 @@
-cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
-
-set(TARGET_CPU "cortex-m3")
-set(GNU_TOOLCHAIN_PATH "C:/PROGRA~2/GNUTOO~1/92019-~1/bin")
+INCLUDE(CMakeForceCompiler)
 
 set(CMAKE_SYSTEM_NAME Generic)
-set(CMAKE_SYSTEM_PROCESSOR ${TARGET_CPU})
 
-set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_INCLUDES ON)
+set(CMAKE_C_USE_RESPONSE_FILE_FOR_INCLUDES ON)
+set(CMAKE_NEED_RESPONSE ON)
 
-set(CMAKE_C_COMPILER             "${GNU_TOOLCHAIN_PATH}/AR19DD~1.EXE")
-set(CMAKE_CXX_COMPILER           "${GNU_TOOLCHAIN_PATH}/AR10B2~1.EXE")
-set(CMAKE_ASM_COMPILER           "${GNU_TOOLCHAIN_PATH}/AR19DD~1.EXE")
-set(CMAKE_SIZE_UTIL              "${GNU_TOOLCHAIN_PATH}/AR0A07~1.EXE")
-set(CMAKE_OBJCOPY                "${GNU_TOOLCHAIN_PATH}/ARF839~1.EXE")
-set(CMAKE_AR                     "${GNU_TOOLCHAIN_PATH}/ARM-NO~2.EXE")
-set(CMAKE_OBJDUMP                "${GNU_TOOLCHAIN_PATH}/AR39F3~1.EXE")
-set(CMAKE_ADDR2LINE              "${GNU_TOOLCHAIN_PATH}/ARM-NO~1.EXE")
-set(CMAKE_ASM_COMPILER_AR        "${GNU_TOOLCHAIN_PATH}/AR743F~1.EXE")
-set(CMAKE_ASM_COMPILER_RANLIB    "${GNU_TOOLCHAIN_PATH}/AR738D~1.EXE")
-set(CMAKE_DLLTOOL                "${GNU_TOOLCHAIN_PATH}/AR39F3~1.EXE")
+find_program(CC NAMES arm-none-eabi-gcc PATHS $ENV{ARM_TOOLCHAIN})
+find_program(CXX NAMES arm-none-eabi-g++ PATHS $ENV{ARM_TOOLCHAIN})
 
-set(COMMON_FLAGS "-mthumb -mcpu=${TARGET_CPU} -mno-thumb-interwork -mfpu=vfp -msoft-float -mfix-${TARGET_CPU}-ldrd")
-set(C_CXX_FLAGS  "--specs=nano.specs -ffunction-sections -fdata-sections -ffreestanding")
-set(CXX_FLAGS    "-fno-exceptions -fno-rtti -fno-threadsafe-statics")
+find_program(CMAKE_GCOV NAMES arm-none-eabi-gcov PATHS $ENV{ARM_TOOLCHAIN})
+find_program(CMAKE_AR NAMES arm-none-eabi-gcc-ar PATHS $ENV{ARM_TOOLCHAIN})
+find_program(CMAKE_RANLIB NAMES arm-none-eabi-gcc-ranlib PATHS $ENV{ARM_TOOLCHAIN})
+find_program(CMAKE_OBJCOPY NAMES arm-none-eabi-objcopy PATHS $ENV{ARM_TOOLCHAIN})
+find_program(CMAKE_OBJDUMP NAMES arm-none-eabi-objdump PATHS $ENV{ARM_TOOLCHAIN})
+find_program(CMAKE_GCC_SIZE NAMES arm-none-eabi-size PATHS $ENV{ARM_TOOLCHAIN})
+find_program(GDB NAMES arm-none-eabi-gdb-py PATHS $ENV{ARM_TOOLCHAIN})
 
-set(CMAKE_C_FLAGS_INIT          "${COMMON_FLAGS} ${C_CXX_FLAGS} "              CACHE STRING "" FORCE)
-set(CMAKE_CXX_FLAGS_INIT        "${COMMON_FLAGS} ${C_CXX_FLAGS} ${CXX_FLAGS}" CACHE STRING "" FORCE)
-set(CMAKE_ASM_FLAGS_INIT        "${COMMON_FLAGS} -x assembler-with-cpp "       CACHE STRING "" FORCE)
-set(CMAKE_EXE_LINKER_FLAGS_INIT "-Wl,--gc-sections"                           CACHE STRING "" FORCE)
+set(CMAKE_C_COMPILER ${CC})
+set(CMAKE_CXX_COMPILER ${CXX})
 
-set(CMAKE_C_FLAGS_DEBUG     "-Og -g"          CACHE STRING "" FORCE)
-set(CMAKE_CXX_FLAGS_DEBUG   "-Og -g"          CACHE STRING "" FORCE)
-set(CMAKE_C_FLAGS_RELEASE   "-Os -g -DNDEBUG" CACHE STRING "" FORCE)
-set(CMAKE_CXX_FLAGS_RELEASE "-Os -g -DNDEBUG" CACHE STRING "" FORCE)
+# As CMake tries to compile executable using ,,standard" arguments it fails on
+# checking arm-gcc compiler. Instead try to compile a static library, which avoids
+# running linker and such an approach is intended for cross-compiling
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 
-set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+find_program(JLINK NAMES JLink JLinkExe PATHS $ENV{ARM_TOOLCHAIN} $ENV{JLINK_PATH})
+find_program(JLinkGDBServer NAMES JLinkGDBServerCL PATHS $ENV{ARM_TOOLCHAIN} $ENV{JLINK_PATH})
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS             ON)
-set(CMAKE_C_USE_RESPONSE_FILE_FOR_INCLUDES    ON)
-set(CMAKE_C_USE_RESPONSE_FILE_FOR_LIBRARIES   ON)
-set(CMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS     ON)
-set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_INCLUDES  ON)
-set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_LIBRARIES ON)
-set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS   ON)
-set(CMAKE_NINJA_FORCE_RESPONSE_FILE           ON)
+# FIND_PACKAGE(Doxygen) # TODO add doxygen in future 
 
-set(CMAKE_C_COMPILER_WORKS 1)
-set(CMAKE_CXX_COMPILER_WORKS 1)
+set(CMAKE_EXECUTABLE_FORMAT ELF)
+
+if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
+    find_program(CMAKE_MAKE_PROGRAM NAMES make PATHS $ENV{ARM_TOOLCHAIN})
+endif()

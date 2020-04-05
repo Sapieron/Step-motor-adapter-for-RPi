@@ -49,6 +49,8 @@
 *****************************************************************************
 */
 
+/* //TODO use linker script as in Kormanyos' book */
+
 /* Entry Point */
 ENTRY(Reset_Handler)
 

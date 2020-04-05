@@ -1,89 +1,59 @@
-cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
-set(OUTPUT_FILE_NAME "firmware")
+cmake_minimum_required(VERSION 3.1)
 
-if(NOT CMAKE_BUILD_TYPE)
-    message(STATUS "CMAKE_BUILD_TYPE not set, defaulting to DEBUG")
-    set(CMAKE_BUILD_TYPE DEBUG)
-else()
-    message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
-endif()
-
-message(STATUS "CMAKE_TOOLCHAIN_FILE: ${CMAKE_TOOLCHAIN_FILE}")
-
-project(${OUTPUT_FILE_NAME} C CXX ASM)
-
+include(cmake/toolchain.cmake)
 include(cmake/utils.cmake)
 
+project(STEP-MOTOR-ADAPTER C CXX ASM)
+
+option(ENABLE_LTO "Use link time optimization" OFF)
+
+set(ENABLE_COVERAGE FALSE CACHE BOOL "Enable code coverage")
+
+set(MEM_MANAGMENT_TYPE 1)
+
+set(TARGET_MCU_PLATFORM "EngModel" CACHE STRING "Target mcu platform")
+set(SEMIHOSTING false CACHE BOOL "Enable semihosting")
+set(JLINK_SN "" CACHE STRING "J-Link serial number")
+
+set(MCU_PLATFORM_PATH ${CMAKE_CURRENT_SOURCE_DIR}/platforms/mcu/${TARGET_MCU_PLATFORM})
+
+set(OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/build/${TARGET_MCU_PLATFORM})
+
+file(MAKE_DIRECTORY ${OUTPUT_PATH})
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_PATH}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_PATH}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_PATH}/bin)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
+else()
+    set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "" FORCE)
+endif()
+
+if(EXISTS ${MCU_PLATFORM_PATH})
+else()
+  message(FATAL_ERROR "Target mcu platform '${MCU_PLATFORM_PATH}' does not exist")
+endif()
+
+include(${MCU_PLATFORM_PATH}/settings.cmake)
+add_subdirectory(${MCU_PLATFORM_PATH})
+
 add_subdirectory(drivers)
+add_subdirectory(src)
 add_subdirectory(libraries)
+add_subdirectory(doc)
+add_subdirectory(unit_tests)
 
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hxx
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.s
-)
-
-add_executable(${PROJECT_NAME})
-
-target_include_directories(${PROJECT_NAME}
-    PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/src"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/mcu/include"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/payload/include"
-)
-
-target_sources(${PROJECT_NAME}
-    PRIVATE
-        ${SOURCES}
-)
-
-set_target_properties(${PROJECT_NAME}
-    PROPERTIES
-        SUFFIX ".elf"
-        C_STANDARD 11
-        C_EXTENSIONS ON
-        CMAKE_C_STANDARD_REQUIRED ON
-        CXX_STANDARD 20
-        CXX_EXTENSIONS ON
-        CMAKE_CXX_STANDARD_REQUIRED ON
-)
-
-target_compile_options(${PROJECT_NAME}
-    PRIVATE
-        -x c++
-        -Wall
-        -Wextra
-        -Wpedantic
-        -Wduplicated-cond
-        -Wduplicated-branches
-        -Wlogical-op
-        -Wnull-dereference
-        -Wshadow
-        -Wconversion
-        -Wsign-conversion
-        -O0
-)
-
-target_link_libraries(${PROJECT_NAME}
-    PRIVATE
-        ${PROJECT_NAME}-hal
-        gpio
-        uart
-)
-
-target_link_options(${PROJECT_NAME}
-    PRIVATE
-        -Wl,-Map=${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.map,--cref
-)
-
-utils_target_set_linker_script(${PROJECT_NAME}
-    ${CMAKE_CURRENT_SOURCE_DIR}/drivers/drivers/external/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/linker/STM32F103XB_FLASH.ld
-)
-
-utils_target_generate_hex(${PROJECT_NAME})
-utils_target_generate_bin(${PROJECT_NAME})
-utils_target_print_size(${PROJECT_NAME})
+message("----------------------------------------------------------------------------------------------------------------")
+message("----------------------------------------------------------------------------------------------------------------")
+message(STATUS "Using CPP compiler from ${CMAKE_CXX_COMPILER}")
+message(STATUS "Using C compiler from ${CMAKE_C_COMPILER}")
+message(STATUS "Target mcu platform ${TARGET_MCU_PLATFORM}")
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "Code coverage: ${ENABLE_COVERAGE}")
+if(NOT ${JLINK_SN} STREQUAL "")
+    message(STATUS "J-Link serial number: ${JLINK_SN}")
+endif()

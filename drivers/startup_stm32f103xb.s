@@ -1,9 +1,9 @@
 /**
   ******************************************************************************
-  * @file      startup_stm32.s dedicated to STM32F103C8Tx device
+  * @file      startup_stm32.s dedicated to STM32F103CBTx device
   * @author    Ac6
   * @version   V1.0.0
-  * @date      2019-07-29
+  * @date      2020-03-31
   ******************************************************************************
   */
 
@@ -103,7 +103,7 @@ Infinite_Loop:
   .size Default_Handler, .-Default_Handler
 /******************************************************************************
 *
-* The STM32F103C8Tx vector table.  Note that the proper constructs
+* The STM32F103CBTx vector table.  Note that the proper constructs
 * must be placed on this to ensure that it ends up at physical address
 * 0x0000.0000.
 *

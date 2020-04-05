@@ -7,14 +7,17 @@
         {
             "name": "Cortex Debug",
             "cwd": "${workspaceRoot}",
-            "executable": "${workspaceRoot}/build/firmware.elf",
+            "executable": "${workspaceRoot}/build/build/EngModel/bin/step_motor_adapter",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "jlink",
-            "device": "STM32F103RB",
+            "device": "STM32F103CB",
             "interface": "swd",
-            "ipAddress": null,
-            "serialNumber": null,
+            "svdFile": "STM32F103.svd",
+            "postLaunchCommands": [
+                "b main",
+                "continue",
+            ],
         }
     ]
 }

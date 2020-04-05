@@ -13,32 +13,120 @@
 #include <cstdint>
 
 #include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_uart.h"
 #include "stm32f1xx.h"
+#include "stm32f103xb.h"
 #include "system_stm32f1xx.h"
 
 #include "gpio/forward.hpp"
 #include "mcu/board.hpp"
 
-/**
- * @brief Instance of Board. Delivers access to peripherals
- * 		  and other //TODO what is ,,other?"
- */
-BOARD Main;
+/** @brief Instance of Board. Delivers access to peripherals */
+// BOARD Main;
 
 void SetupHardware()
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();      //FIXME make it pretty!
-	//GPIO_PinModeSet(io_map::XTAL::HF::Pin1::Port, io_map::XTAL::HF::Pin1::PinNumber, );
-	Main.Hardware.Initialize();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	// Main.Hardware.Initialize();
 }
 
+/******************************************************************************\
+ * 						TEMPORARY CODE TO TEST ON
+\******************************************************************************/
+UART_HandleTypeDef uartInitInstance;
+
+void SetupTerminal()
+{
+	/* TX on PA2, RX on PA3 */
+	//1. turn on clock
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_USART2_CLK_ENABLE();
+
+	//2. configure RX and TX pins
+	GPIO_InitTypeDef gpioOfUart2;
+	gpioOfUart2.Mode = GPIO_MODE_AF_PP;
+	gpioOfUart2.Speed = GPIO_SPEED_FREQ_LOW;
+	gpioOfUart2.Pull = GPIO_NOPULL;
+	gpioOfUart2.Pin = GPIO_PIN_2;
+	HAL_GPIO_Init(GPIOA, &gpioOfUart2);
+
+	gpioOfUart2.Mode = GPIO_MODE_AF_INPUT;
+	gpioOfUart2.Speed = GPIO_SPEED_FREQ_LOW;
+	gpioOfUart2.Pull = GPIO_NOPULL;
+	gpioOfUart2.Pin = GPIO_PIN_3;
+	HAL_GPIO_Init(GPIOA, &gpioOfUart2);
+	
+	//3. configure usart2
+	uartInitInstance.Instance = USART2;
+	uartInitInstance.Init.BaudRate = 115200;
+	uartInitInstance.Init.Mode = UART_MODE_TX_RX;
+	uartInitInstance.Init.Parity = UART_PARITY_NONE;
+	uartInitInstance.Init.StopBits = UART_STOPBITS_1;
+	uartInitInstance.Init.WordLength = UART_WORDLENGTH_8B;
+	uartInitInstance.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	uartInitInstance.Init.OverSampling = UART_OVERSAMPLING_16;
+	HAL_UART_Init(&uartInitInstance);
+
+}
+
+// #include <cstring>
+// void uartSendString(char const* wordToSend)
+// {
+// 	//4. use HAL to send string
+// 	auto wordLength = static_cast<std::uint16_t>(strlen(wordToSend) );
+// 	HAL_UART_Transmit(&uartInitInstance, (std::uint8_t*)wordToSend, wordLength, 1000);		//check UART_Transmit_DMA
+// }
+
+// FIXME oscillator does not oscillate, please check hardware
+// void ConfigureClockSource()
+// {
+// 	RCC_OscInitTypeDef RCC_oscInitInstance;
+
+// 	RCC_oscInitInstance.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+// 	RCC_oscInitInstance.HSEState = RCC_HSE_ON;
+// 	HAL_RCC_OscConfig(&RCC_oscInitInstance);
+// }
+
+/******************************************************************************\
+ * 								MAIN APPLICATION
+\******************************************************************************/
 int main(void)
 {
-	HAL_Init();
-	SetupHardware();
+	// SystemCoreClock = 8000000;
+	// HAL_Init();
 
+	// SetupHardware();
+
+	// ConfigureClockSource();
+
+	// SetupTerminal();
+
+	HAL_NVIC_EnableIRQ(USART2_IRQn);
+
+	// char const *dataToSend = "Hello\r\n";
+	// uartSendString(dataToSend);
+
+	RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;							// enable clock
+	GPIOC->CRH &= ~(GPIO_CRH_MODE9 | GPIO_CRH_CNF9);			// reset PC13
+	GPIOC->CRH |= (GPIO_CRH_MODE9_1 | GPIO_CRH_MODE9_0);		// config PC13
+
+	/** @brief Events are handled with interrupts */
 	while(1)
 	{
-		Main.Hardware.Pins.LedCommOk.High();
+		GPIOB->BSRR = GPIO_BSRR_BS9;   // led on - active low
+		// if(__HAL_UART_GET_FLAG(&uartInitInstance, UART_FLAG_RXNE) == SET)
+		// {
+		// 	// Main.Hardware.Pins.LedCommOk.High();
+		// 	__HAL_UART_CLEAR_FLAG(&uartInitInstance, UART_FLAG_RXNE);
+		// }
 	}
+}
+
+/******************************************************************************\
+ * 								IRQ Handlers
+\******************************************************************************/
+void USART2_IRQHandler(void)
+{
+	// Main.Hardware.Pins.LedCommOk.High();
 }
