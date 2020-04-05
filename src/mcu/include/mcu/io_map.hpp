@@ -22,8 +22,8 @@
 
 namespace io_map
 {
-    using LedCommOk = PinLocation<GPIOA_BASE, GPIO_PIN_0>;
-
+    // using LedCommOk = PinLocation<GPIOA_BASE, GPIO_PIN_0>;   //Original COMM
+    using LedCommOk = PinLocation<GPIOB_BASE, GPIO_PIN_9>;  //External Enable pin
     struct XTAL : public PinGroupTag
     {
         struct HF

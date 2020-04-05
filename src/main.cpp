@@ -28,8 +28,14 @@ BOARD Main;
 void SetupHardware()
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();      //FIXME make it pretty!
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	//GPIO_PinModeSet(io_map::XTAL::HF::Pin1::Port, io_map::XTAL::HF::Pin1::PinNumber, );
 	Main.Hardware.Initialize();
+}
+
+void wait()
+{
+	for(int i = 0; i < 15000; i++);
 }
 
 int main(void)
@@ -40,5 +46,38 @@ int main(void)
 	while(1)
 	{
 		Main.Hardware.Pins.LedCommOk.High();
+		wait();
+		Main.Hardware.Pins.LedCommOk.Low();
+		wait();
 	}
 }
+
+#ifdef __cplusplus
+ extern "C" {
+#endif 
+
+/* Includes ------------------------------------------------------------------*/
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
+/* Exported macro ------------------------------------------------------------*/
+/* Exported functions ------------------------------------------------------- */
+
+void NMI_Handler(void);
+void HardFault_Handler(void);
+void MemManage_Handler(void);
+void BusFault_Handler(void);
+void UsageFault_Handler(void);
+void SVC_Handler(void);
+void DebugMon_Handler(void);
+void PendSV_Handler(void);
+void SysTick_Handler(void);
+
+void SysTick_Handler(void)
+{
+	HAL_IncTick();
+	HAL_SYSTICK_IRQHandler();
+}
+
+#ifdef __cplusplus
+}
+#endif

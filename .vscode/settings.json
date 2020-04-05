@@ -115,7 +115,8 @@
         "thread": "cpp",
         "typeindex": "cpp",
         "valarray": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "stm32f1xx_it.h": "c"
     },
     "C_Cpp.default.includePath": [
         "D:/WINDOWS_DATA/Cygwin/usr/include"
