@@ -15,14 +15,13 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_uart.h"
 #include "stm32f1xx.h"
-#include "stm32f103xb.h"
 #include "system_stm32f1xx.h"
 
 #include "gpio/forward.hpp"
 #include "mcu/board.hpp"
 
 /** @brief Instance of Board. Delivers access to peripherals */
-// BOARD Main;
+BOARD Main;
 
 void SetupHardware()
 {
@@ -88,38 +87,38 @@ void SetupTerminal()
 // 	HAL_RCC_OscConfig(&RCC_oscInitInstance);
 // }
 
+void wait()
+{
+	for(int i = 0; i < 15000; i++);
+}
+
 /******************************************************************************\
  * 								MAIN APPLICATION
 \******************************************************************************/
 int main(void)
 {
 	// SystemCoreClock = 8000000;
-	// HAL_Init();
+	HAL_Init();
 
-	// SetupHardware();
+	SetupHardware();
 
 	// ConfigureClockSource();
 
-	// SetupTerminal();
+	SetupTerminal();
 
 	HAL_NVIC_EnableIRQ(USART2_IRQn);
 
 	// char const *dataToSend = "Hello\r\n";
 	// uartSendString(dataToSend);
 
-	RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;							// enable clock
-	GPIOC->CRH &= ~(GPIO_CRH_MODE9 | GPIO_CRH_CNF9);			// reset PC13
-	GPIOC->CRH |= (GPIO_CRH_MODE9_1 | GPIO_CRH_MODE9_0);		// config PC13
 
 	/** @brief Events are handled with interrupts */
 	while(1)
 	{
-		GPIOB->BSRR = GPIO_BSRR_BS9;   // led on - active low
-		// if(__HAL_UART_GET_FLAG(&uartInitInstance, UART_FLAG_RXNE) == SET)
-		// {
-		// 	// Main.Hardware.Pins.LedCommOk.High();
-		// 	__HAL_UART_CLEAR_FLAG(&uartInitInstance, UART_FLAG_RXNE);
-		// }
+		Main.Hardware.Pins.LedCommOk.High();
+		wait();
+		Main.Hardware.Pins.LedCommOk.Low();
+		wait();
 	}
 }
 
@@ -128,5 +127,36 @@ int main(void)
 \******************************************************************************/
 void USART2_IRQHandler(void)
 {
-	// Main.Hardware.Pins.LedCommOk.High();
+	Main.Hardware.Pins.LedCommOk.High();
+	HAL_NVIC_ClearPendingIRQ(USART2_IRQn);
 }
+
+#ifdef __cplusplus
+ extern "C" {
+#endif 
+
+/* Includes ------------------------------------------------------------------*/
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
+/* Exported macro ------------------------------------------------------------*/
+/* Exported functions ------------------------------------------------------- */
+
+void NMI_Handler(void);
+void HardFault_Handler(void);
+void MemManage_Handler(void);
+void BusFault_Handler(void);
+void UsageFault_Handler(void);
+void SVC_Handler(void);
+void DebugMon_Handler(void);
+void PendSV_Handler(void);
+void SysTick_Handler(void);
+
+void SysTick_Handler(void)
+{
+	HAL_IncTick();
+	HAL_SYSTICK_IRQHandler();
+}
+
+#ifdef __cplusplus
+}
+#endif
