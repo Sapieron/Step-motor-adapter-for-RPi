@@ -1,18 +1,3 @@
-# function(target_generate_hex TARGET)
-#   set (EXEC_OBJ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TARGET})
-#   set (HEX_OBJ ${EXEC_OBJ}.hex)
-
-#   set_target_properties(${TARGET} PROPERTIES HEX_FILE ${HEX_OBJ})
-
-#   add_custom_command(OUTPUT ${HEX_OBJ}
-#       COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXEC_OBJ} ${HEX_OBJ}
-#       DEPENDS ${TARGET}
-#   )
-
-#   add_custom_target (${TARGET}.hex DEPENDS ${HEX_OBJ})
-# endfunction(target_generate_hex)
-
-# FIXME TO CHECK IF IT WORKS
 macro(target_generate_hex TARGET)
     add_custom_target(${TARGET}-hex
         ALL
@@ -26,7 +11,6 @@ macro(target_generate_hex TARGET)
     )
 endmacro()
 
-# FIXME GET RIDOF EXTRA FUNCTIONS
 macro(target_generate_bin TARGET)
     add_custom_target(${TARGET}-bin
         ALL
@@ -39,20 +23,6 @@ macro(target_generate_bin TARGET)
         ${TARGET}
     )
 endmacro()
-
-# function(target_generate_bin TARGET)
-#   set (EXEC_OBJ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TARGET})
-#   set (BIN_OBJ ${EXEC_OBJ}.bin)
-
-#   set_target_properties(${TARGET} PROPERTIES BIN_FILE ${BIN_OBJ})
-
-#   add_custom_command(OUTPUT ${BIN_OBJ}
-#       COMMAND ${CMAKE_OBJCOPY} -R .boot_params -O binary ${EXEC_OBJ} ${BIN_OBJ}
-#       DEPENDS ${TARGET}
-#   )
-
-#   add_custom_target (${TARGET}.bin DEPENDS ${BIN_OBJ})
-# endfunction(target_generate_bin)
 
 function(target_jlink_flash TARGET BASE_ADDRESS)
   set(COMMAND_FILE ${CMAKE_BINARY_DIR}/jlink/${TARGET}.flash.jlink)
@@ -92,6 +62,7 @@ macro(target_memory_report TARGET)
             COMMAND
                 ${CMAKE_GCC_SIZE} --format=sysv --radix=16 $<TARGET_FILE:${TARGET}>
     )
+    set_property(TARGET ${NAME} APPEND_STRING PROPERTY LINK_FLAGS " -Wl,-Map=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${NAME}.map")
 endmacro()
 
 

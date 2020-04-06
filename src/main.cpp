@@ -27,47 +27,47 @@ void SetupHardware()
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();      //FIXME make it pretty!
 	__HAL_RCC_GPIOB_CLK_ENABLE();
-	// Main.Hardware.Initialize();
+	Main.Hardware.Initialize();
 }
 
 /******************************************************************************\
  * 						TEMPORARY CODE TO TEST ON
 \******************************************************************************/
-UART_HandleTypeDef uartInitInstance;
+// UART_HandleTypeDef uartInitInstance;
 
-void SetupTerminal()
-{
-	/* TX on PA2, RX on PA3 */
-	//1. turn on clock
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	__HAL_RCC_USART2_CLK_ENABLE();
+// void SetupTerminal()
+// {
+// 	/* TX on PA2, RX on PA3 */
+// 	//1. turn on clock
+// 	__HAL_RCC_GPIOA_CLK_ENABLE();
+// 	__HAL_RCC_USART2_CLK_ENABLE();
 
-	//2. configure RX and TX pins
-	GPIO_InitTypeDef gpioOfUart2;
-	gpioOfUart2.Mode = GPIO_MODE_AF_PP;
-	gpioOfUart2.Speed = GPIO_SPEED_FREQ_LOW;
-	gpioOfUart2.Pull = GPIO_NOPULL;
-	gpioOfUart2.Pin = GPIO_PIN_2;
-	HAL_GPIO_Init(GPIOA, &gpioOfUart2);
+// 	//2. configure RX and TX pins
+// 	GPIO_InitTypeDef gpioOfUart2;
+// 	gpioOfUart2.Mode = GPIO_MODE_AF_PP;
+// 	gpioOfUart2.Speed = GPIO_SPEED_FREQ_LOW;
+// 	gpioOfUart2.Pull = GPIO_NOPULL;
+// 	gpioOfUart2.Pin = GPIO_PIN_2;
+// 	HAL_GPIO_Init(GPIOA, &gpioOfUart2);
 
-	gpioOfUart2.Mode = GPIO_MODE_AF_INPUT;
-	gpioOfUart2.Speed = GPIO_SPEED_FREQ_LOW;
-	gpioOfUart2.Pull = GPIO_NOPULL;
-	gpioOfUart2.Pin = GPIO_PIN_3;
-	HAL_GPIO_Init(GPIOA, &gpioOfUart2);
+// 	gpioOfUart2.Mode = GPIO_MODE_AF_INPUT;
+// 	gpioOfUart2.Speed = GPIO_SPEED_FREQ_LOW;
+// 	gpioOfUart2.Pull = GPIO_NOPULL;
+// 	gpioOfUart2.Pin = GPIO_PIN_3;
+// 	HAL_GPIO_Init(GPIOA, &gpioOfUart2);
 	
-	//3. configure usart2
-	uartInitInstance.Instance = USART2;
-	uartInitInstance.Init.BaudRate = 115200;
-	uartInitInstance.Init.Mode = UART_MODE_TX_RX;
-	uartInitInstance.Init.Parity = UART_PARITY_NONE;
-	uartInitInstance.Init.StopBits = UART_STOPBITS_1;
-	uartInitInstance.Init.WordLength = UART_WORDLENGTH_8B;
-	uartInitInstance.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	uartInitInstance.Init.OverSampling = UART_OVERSAMPLING_16;
-	HAL_UART_Init(&uartInitInstance);
+// 	//3. configure usart2
+// 	uartInitInstance.Instance = USART2;
+// 	uartInitInstance.Init.BaudRate = 115200;
+// 	uartInitInstance.Init.Mode = UART_MODE_TX_RX;
+// 	uartInitInstance.Init.Parity = UART_PARITY_NONE;
+// 	uartInitInstance.Init.StopBits = UART_STOPBITS_1;
+// 	uartInitInstance.Init.WordLength = UART_WORDLENGTH_8B;
+// 	uartInitInstance.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+// 	uartInitInstance.Init.OverSampling = UART_OVERSAMPLING_16;
+// 	HAL_UART_Init(&uartInitInstance);
 
-}
+// }
 
 // #include <cstring>
 // void uartSendString(char const* wordToSend)
@@ -97,16 +97,16 @@ void wait()
 \******************************************************************************/
 int main(void)
 {
-	// SystemCoreClock = 8000000;
+	SystemCoreClock = 8000000;
 	HAL_Init();
 
 	SetupHardware();
 
 	// ConfigureClockSource();
 
-	SetupTerminal();
+	// SetupTerminal();
 
-	HAL_NVIC_EnableIRQ(USART2_IRQn);
+	// HAL_NVIC_EnableIRQ(USART2_IRQn);
 
 	// char const *dataToSend = "Hello\r\n";
 	// uartSendString(dataToSend);
@@ -125,11 +125,11 @@ int main(void)
 /******************************************************************************\
  * 								IRQ Handlers
 \******************************************************************************/
-void USART2_IRQHandler(void)
-{
-	Main.Hardware.Pins.LedCommOk.High();
-	HAL_NVIC_ClearPendingIRQ(USART2_IRQn);
-}
+// void USART2_IRQHandler(void)
+// {
+// 	Main.Hardware.Pins.LedCommOk.High();
+// 	HAL_NVIC_ClearPendingIRQ(USART2_IRQn);
+// }
 
 #ifdef __cplusplus
  extern "C" {
