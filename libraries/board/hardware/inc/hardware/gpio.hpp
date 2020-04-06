@@ -1,20 +1,28 @@
 /**
  * @file gpio.hpp
- * @author https://github.com/Sapieron
+ * @author Pawel Klisz (pawelochojec@gmail.com)
  * @brief  Contains template structures describing peripheral pins,
  *         initialization functions
- * 
  * @version 0.1
  * @date 2020-02-27
  * 
- * @copyright Copyright (c) 2020
+ * @copyright Copyright (c) 2020 by Pawel Klisz. All rights reserved
+ * 
+ * Released under the terms of the GNU General Public License version 3 or later.
+ * For full license please refer to LICENSE.txt
+ * 
+ * This project can be found on https://github.com/Sapieron/Step-motor-adapter-for-RPi
+ * 
  */
 
-#ifndef LIBS_OBC_HARDWARE_INCLUDE_OBC_GPIO_H_
-#define LIBS_OBC_HARDWARE_INCLUDE_OBC_GPIO_H_
+#ifndef LIBS_BOARD_HARDWARE_INCLUDE_BOARD_GPIO_H_
+#define LIBS_BOARD_HARDWARE_INCLUDE_BOARD_GPIO_H_
+
+#pragma once
 
 #include "stm32f1xx_hal_gpio.h"
 #include "stm32f1xx_hal_rcc.h"
+
 
 #include "gpio/forward.hpp"
 #include "gpio/driver.hpp"
@@ -119,4 +127,4 @@ namespace board
     /** @} */
 }
 
-#endif /* LIBS_OBC_HARDWARE_INCLUDE_OBC_GPIO_H_ */
+#endif /* LIBS_BOARD_HARDWARE_INCLUDE_BOARD_GPIO_H_ */

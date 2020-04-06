@@ -122,5 +122,15 @@
     ],
     "gtest-adapter.debugConfig": [
         "Cortex Debug"
+    ],
+    "doxdocgen.generic.authorEmail": "pawelochojec@gmail.com",
+    "doxdocgen.generic.authorName": "Pawel Klisz",
+    "doxdocgen.file.copyrightTag": [
+        "@copyright Copyright (c) {year} by Pawel Klisz. All rights reserved",
+        "",
+        "Released under the terms of the GNU General Public License version 3 or later.",
+        "For full license please refer to LICENSE.txt",
+        "",
+        "This project can be found on https://github.com/Sapieron/Step-motor-adapter-for-RPi"
     ]
 }

@@ -1,12 +1,16 @@
 /**
  * @file io_map.hpp
- * @author https://github.com/Sapieron
- * @brief  This file contains all peripheral pin mappings
- * 
+ * @author Pawel Klisz (pawelochojec@gmail.com)
+ * @brief This file contains peripheral pin's definitions specific for Engineering Model
  * @version 0.1
  * @date 2020-03-14
  * 
- * @copyright Copyright (c) 2020
+ * @copyright Copyright (c) 2020 by Pawel Klisz. All rights reserved
+ * 
+ * Released under the terms of the GNU General Public License version 3 or later.
+ * For full license please refer to LICENSE.txt
+ * 
+ * This project can be found on https://github.com/Sapieron/Step-motor-adapter-for-RPi
  * 
  */
 

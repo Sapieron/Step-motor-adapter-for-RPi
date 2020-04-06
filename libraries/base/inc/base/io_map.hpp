@@ -1,15 +1,23 @@
 /**
  * @file io_map.hpp
- * @author https://github.com/Sapieron
+ * @author Pawel Klisz (pawelochojec@gmail.com)
  * @brief  This file defines templates for specific I/O used within the board
  * @version 0.1
  * @date 2020-03-14
  * 
- * @copyright Copyright (c) 2020
+ * @copyright Copyright (c) 2020 by Pawel Klisz. All rights reserved
+ * 
+ * Released under the terms of the GNU General Public License version 3 or later.
+ * For full license please refer to LICENSE.txt
+ * 
+ * This project can be found on https://github.com/Sapieron/Step-motor-adapter-for-RPi
+ * 
  */
 
 #ifndef LIBS_TEMPLATE_INCLUDE_BASE_IO_MAP_H_
 #define LIBS_TEMPLATE_INCLUDE_BASE_IO_MAP_H_
+
+#pragma once
 
 #include <cstdint>
 

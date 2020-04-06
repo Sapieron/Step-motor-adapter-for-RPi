@@ -1,13 +1,17 @@
 /**
  * @file driver.hpp
- * @author https://github.com/Sapieron
+ * @author Pawel Klisz (pawelochojec@gmail.com)
  * @brief  Contains thin wrapper over HAL libraries in order
  *         to provide API in C++
- * 
  * @version 0.1
  * @date 2020-03-14
  * 
- * @copyright Copyright (c) 2020
+ * @copyright Copyright (c) 2020 by Pawel Klisz. All rights reserved
+ * 
+ * Released under the terms of the GNU General Public License version 3 or later.
+ * For full license please refer to LICENSE.txt
+ * 
+ * This project can be found on https://github.com/Sapieron/Step-motor-adapter-for-RPi
  * 
  */
 

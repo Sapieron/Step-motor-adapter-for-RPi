@@ -1,14 +1,24 @@
 /**
- * @file gpio-internal.hpp
- * @author https://github.com/Sapieron
+ * @file gpio_internal.hpp
+ * @author Pawel Klisz (pawelochojec@gmail.com)
  * @brief  Provides helper functions to detect conflicts between pins,
  *         provides function to connect io_map to BOARDGpio
- * 
  * @version 0.1
  * @date 2020-03-14
  * 
- * @copyright Copyright (c) 2020
+ * @copyright Copyright (c) 2020 by Pawel Klisz. All rights reserved
+ * 
+ * Released under the terms of the GNU General Public License version 3 or later.
+ * For full license please refer to LICENSE.txt
+ * 
+ * This project can be found on https://github.com/Sapieron/Step-motor-adapter-for-RPi
+ * 
  */
+
+#ifndef LIBS_BOARD_HARDWARE_INCLUDE_GPIO_INTERNAL_H_
+#define LIBS_BOARD_HARDWARE_INCLUDE_GPIO_INTERNAL_H_
+
+#pragma once
 
 #include "base/io_map.hpp"
 
@@ -102,3 +112,7 @@ namespace board
         };
     } // namespace gpio
 } // namespace board
+
+
+
+#endif /* LIBS_BOARD_HARDWARE_INCLUDE_GPIO_INTERNAL_H_ */
