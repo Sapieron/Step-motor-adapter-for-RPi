@@ -41,7 +41,6 @@ endif()
 include(${MCU_PLATFORM_PATH}/settings.cmake)
 add_subdirectory(${MCU_PLATFORM_PATH})
 
-add_subdirectory(drivers)
 add_subdirectory(src)
 add_subdirectory(libraries)
 add_subdirectory(doc)

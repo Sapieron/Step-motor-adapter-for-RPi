@@ -13,3 +13,12 @@
  * This project can be found on https://github.com/Sapieron/Step-motor-adapter-for-RPi
  * 
  */
+
+namespace function
+{
+    template<typename ledToBlink, typename time, typename frequency>
+    struct blink
+    {
+        //TODO use TIM6 to toggle the led
+    };
+} // namespace blink

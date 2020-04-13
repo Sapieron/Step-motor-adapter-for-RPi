@@ -21,7 +21,8 @@
 #pragma once
 
 #include "gpio.hpp"
-
+#include "terminal/driver.hpp"
+#include "uart/driver.hpp"
 
 namespace board
 {
@@ -31,9 +32,7 @@ namespace board
 
         BOARDGPIO Pins;
 
-        //drivers::uart::UART<io_map::UART_0> Terminal;   //TODO add terminal to communicate with SBC
-
-        //drivers::gpio::Pin        //TODO is this needed?
+        drivers::uart::UART<io_map::UART_2> Terminal;
     };
 }
 

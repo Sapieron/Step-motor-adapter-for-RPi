@@ -1,1 +1,3 @@
-# //FIXME move gpio, i2c, uart etc here
+add_subdirectory(gpio)
+add_subdirectory(i2c)
+add_subdirectory(uart)

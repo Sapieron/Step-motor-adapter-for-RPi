@@ -1,7 +1,7 @@
 /**
  * @file driver.hpp
  * @author Pawel Klisz (pawelochojec@gmail.com)
- * @brief //TODO
+ * @brief  Terminal functions definitions
  * @version 0.1
  * @date 2020-04-06
  * 
@@ -19,6 +19,9 @@
 
 #pragma once
 
-//TODO
+class Terminal
+{
+    //
+};
 
 #endif /* TERMINAL_DRIVER_GPP */

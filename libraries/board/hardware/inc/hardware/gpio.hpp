@@ -55,72 +55,73 @@ namespace board
     //     }
     // };
 
-    //TODO add UART functionality
-    // /** @brief Structure describing UART pins */
-    // template <typename Location> struct UARTPins
-    // {
-    //     /** @brief TX */
-    //     const drivers::gpio::OutputPin<typename Location::TX> TX;
-    //     /** @brief RX */
-    //     const drivers::gpio::InputPin<typename Location::RX> RX;
-    //     /** @brief Initializes UART pins */
-    //     void Initialize() const
-    //     {
-    //         this->TX.Initialize();
-    //         this->RX.Initialize();
-    //     }
-    // };
+    /** @brief Structure describing UART pins */
+    template <typename Location> struct UARTPins
+    {
+        /** @brief TX */
+        const drivers::gpio::OutputPinAF<typename Location::TX> TX;   //FIXME maybe using TX = ... would be better?
+        /** @brief RX */
+        const drivers::gpio::InputPinAF<typename Location::RX> RX;
+        /** @brief Initializes UART pins */
+        void Initialize() const
+        {
+            this->TX.Initialize();
+            this->RX.Initialize();
+        }
+    };
 
     /**
      * @brief Composes all used GPIO pins together
      *
      * @remark All used pin locations must derive from tags defined in template/io_map.hpp
      */
-    template <typename TCommOkIndicator//,
-        // typename TUART0,
+    template <typename TCommOkIndicator,
         // typename TUART1,
+        typename TUART2
         // typename TI2C0,
         >
     struct BoardGPIOBase
     {
         /** @brief LedCommOk onboard green led */
         const drivers::gpio::OutputPin<TCommOkIndicator, DISABLE> LedCommOk;
-        /** @brief UART0 */
-        // const UARTPins<TUART0> UART_0;
-        // /** @brief UART1 */
-        // const UARTPins<TUART1> UART_1;
+
+        /** @brief UART1 */
+        // const UARTPins<TUART1> UART_1;   //TODO not yet implemented
+
+        /** @brief UART2 */
+        const UARTPins<TUART2> UART_2;
+
         // /** @brief I2C0 */
-        // const I2CPins<TI2C0> I2C_0;
-        /** @brief Camera selector */
-        //const drivers::gpio::OutputPin<TCamSelect> CamSelect;
+        // const I2CPins<TI2C0> I2C_0;   //TODO not yet implemented
 
-        //TODO maybe pack up step-motors in such a structure?
-        // /** @brief PayloadInterrupt */
-        // const drivers::gpio::InterruptPin<TPayloadInterrupt, false, false, true> PayloadInterrupt;
+        /** @brief Motor 1 */
+        //const MOTORPins<TMOTOR1> MOTOR_1;   //TODO not yet implemented
 
-        // /** @brief SunSInterrupt */
-        // const drivers::gpio::InterruptPin<TSunSInterrupt, false, false, true> SunSInterrupt;
+        /** @brief Motor 2 */
+        //const MOTORPins<TMOTOR2> MOTOR_2;   //TODO not yet implemented
 
-        // /** @brief Sail state indicator. */
-        // const drivers::gpio::InputPin<TSailState> SailIndicator;
+        /** @brief Motor 3*/
+        //const MOTORPins<TMOTOR3> MOTOR_3;   //TODO not yet implemented
+
+        /** @brief Gripper */
+        //const drivers::gpio::OutputPin<TGripper, DISABLE> Gripper;   //TODO not yet implemented
 
         /** @brief Initializes GPIO pins */
         void Initialize() const
         {
             this->LedCommOk.Initialize();
-            // this->UART_0.Initialize();
             // this->UART_1.Initialize();
+            this->UART_2.Initialize();
             // this->I2C_0.Initialize();
         }
     };
 
     /** @brief Connects GPIO pins to IO map */
     using BOARDGPIO = gpio::VerifyPinsUniqueness<BoardGPIOBase,
-        io_map::LedCommOk
-        // io_map::UART_0,
+        io_map::LedCommOk,
         // io_map::UART_1,
+        io_map::UART_2
         // io_map::I2C_0,
-        //io_map::BSP,
         //io_map::XTAL
         >;
 

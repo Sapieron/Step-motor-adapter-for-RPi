@@ -4,13 +4,14 @@ set(SOURCES
     main.cpp
     mcu/board.cpp
     mcu/inc/mcu/board.hpp
+    mcu/inc/mcu/stm32f1xx_it.h
 )
 
 add_executable(${NAME} ${SOURCES})
 
-set_target_properties(${NAME} PROPERTIES LINK_FLAGS "-T ${LINKER_SCRIPT} -L ${MCU_PLATFORM_PATH} -specs=nano.specs -specs=nosys.specs")
+set_target_properties(${NAME} PROPERTIES LINK_FLAGS "-mcpu=cortex-m3 -mthumb -mfloat-abi=soft -T ${LINKER_SCRIPT} -L ${MCU_PLATFORM_PATH} -Wl,--gc-sections -lm -specs=nano.specs -specs=nosys.specs")
 
-target_include_directories(${NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/mcu/inc )
+target_include_directories(${NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/mcu/inc)
 
 target_link_libraries(${NAME}
     board_hardware

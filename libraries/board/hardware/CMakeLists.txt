@@ -14,7 +14,8 @@ target_link_libraries(${NAME}
 	base
 	gpio
 	i2c
-	uart
+    uart
+    terminal
 )
 
 target_include_directories(${NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/inc)

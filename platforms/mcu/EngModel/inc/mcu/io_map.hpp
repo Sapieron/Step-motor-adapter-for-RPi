@@ -20,7 +20,7 @@
 #include <cstdint>
 
 #include "stm32f103xb.h"
-#include "stm32f1xx_hal_gpio.h"
+#include "stm32f1xx_hal.h"
 
 #include "base/io_map.hpp"
 
@@ -29,52 +29,20 @@ namespace io_map
     // using LedCommOk = PinLocation<GPIOA_BASE, GPIO_PIN_0>;  //COMM Diode
     using LedCommOk = PinLocation<GPIOB_BASE, GPIO_PIN_9>; //tester diode
 
-    struct XTAL : public PinGroupTag
-    {
-        struct HF
-        {
-            using Pin1 = PinLocation<GPIOD_BASE, GPIO_PIN_0>;
-            using Pin2 = PinLocation<GPIOD_BASE, GPIO_PIN_1>;
-        };
-
-        struct Group
-        {
-            using Pins = PinContainer<HF::Pin1, HF::Pin2>;
-        };
-    };
-
-    // struct MotorX : public MotorBase
+    // struct XTAL : public PinGroupTag
     // {
-    //     //
+    //     struct HF
+    //     {
+    //         using Pin1 = PinLocation<GPIOD_BASE, GPIO_PIN_0>;
+    //         using Pin2 = PinLocation<GPIOD_BASE, GPIO_PIN_1>;
+    //     };
+
+    //     struct Group
+    //     {
+    //         using Pins = PinContainer<HF::Pin1, HF::Pin2>;
+    //     };
     // };
-//     using MotorControlEnable = PinLocation<GPIOB, 9>;
 
-//   //TODO it should be initialized somehow different, as a StepperMotor template maybe?
-//     using MotorControlDir1   = PinLocation<GPIOB, 10>;
-//     using MotorControlDir2   = PinLocation<GPIOB, 11>;
-//     using MotorControlDir3   = PinLocation<GPIOB, 12>;
-
-//     using MotorControlStep1  = PinLocation<GPIOB, 13>;
-//     using MotorControlStep2  = PinLocation<GPIOB, 14>;
-//     using MotorControlStep3  = PinLocation<GPIOB, 15>;
-
-//     /* Step resolution pins */
-//     using MotorControlMS11   = PinLocation<GPIOB, 0>;
-//     using MotorControlMS12   = PinLocation<GPIOB, 1>;
-//     using MotorControlMS13   = PinLocation<GPIOB, 2>;
-
-//     using MotorControlMS21   = PinLocation<GPIOB, 3>;
-//     using MotorControlMS22   = PinLocation<GPIOB, 4>;
-//     using MotorControlMS23   = PinLocation<GPIOB, 5>;
-
-//     using MotorControlMS31   = PinLocation<GPIOA, 4>;
-//     using MotorControlMS32   = PinLocation<GPIOA, 5>;
-//     using MotorControlMS33   = PinLocation<GPIOA, 6>;
-
-//     using SWDIO              = PinLocation<GPIOA, 13>;
-//     using SWCLK              = PinLocation<GPIOA, 14>;
-
-    //FIXME add UART
     // struct UART_1 : public UARTPins<UART_1>
     // {
     //     static constexpr std::uint32_t* Peripheral          = &USART1_BASE;
@@ -83,29 +51,35 @@ namespace io_map
     //     static constexpr IRQn_Type      WakeUpInterrupt     = IRQn_Type::USART1_IRQn;
     //     //static constexpr std::uint8_t WakeUpInterruptPriority = 5;
 
-    //     using TX = PinLocation<GPIOA_BASE, 9>;
-    //     using RX = PinLocation<GPIOA_BASE, 10>;
+    //     using TX = PinLocation<GPIOA_BASE, GPIO_PIN_9>;
+    //     using RX = PinLocation<GPIOA_BASE, GPIO_PIN_10>;
     // };
 
-    // struct UART_2 : public UARTPins<UART_2>
-    // {
-    //     static constexpr std::uint32_t* Periheral           = &USART2_BASE;
-    //     static constexpr std::uint32_t  Baudrate            = 115200;
-    //     static constexpr std::uint8_t   InterruptPriority   = 7;
-    //     static constexpr IRQn_Type      WakeUpInterrupt     = IRQn_Type::USART2_IRQn;
-    //     //static constexpr std::uint8_t WakeUpInterruptPriority = 5;
+    struct UART_2 : public UARTPins<UART_2>
+    {
+        static constexpr std::uint32_t  Peripheral          = USART2_BASE;
+        static constexpr std::uint32_t  Baudrate            = 2400;
+        static constexpr std::uint32_t  WordLength          = UART_WORDLENGTH_8B;
+        static constexpr std::uint32_t  StopBits            = UART_STOPBITS_1;
+        static constexpr std::uint32_t  ParityBits          = UART_PARITY_NONE;
+        static constexpr std::uint32_t  Mode                = UART_MODE_TX_RX;
+        static constexpr std::uint32_t  HwFlowCtl           = UART_HWCONTROL_NONE;
+        static constexpr std::uint32_t  OverSampling        = UART_OVERSAMPLING_16;
 
-    //     using TX = PinLocation<GPIOA_BASE, 2>;
-    //     using RX = PinLocation<GPIOA_BASE, 3>;
-    // };
+        static constexpr std::uint8_t   InterruptPriority   = 7;
+        static constexpr IRQn_Type      Interrupt           = IRQn_Type::USART2_IRQn;
+
+        using TX = PinLocation<GPIOA_BASE, GPIO_PIN_2>;
+        using RX = PinLocation<GPIOA_BASE, GPIO_PIN_3>;
+    };
 
 //TODO add I2C functionality
 //     struct I2C_1 : public I2CPins<I2C_1>
 //     {
 //         static constexpr std::uint32_t Location = I2C_ROUTE_LOCATION_LOC0;
 
-//         using SCL = PinLocation<GPIOB_BASE, 6>;
-//         using SDA = PinLocation<GPIOB_BASE, 7>;
+//         using SCL = PinLocation<GPIOB_BASE, GPIO_PIN_6>;
+//         using SDA = PinLocation<GPIOB_BASE, GPIO_PIN_7>;
 //     };
 
 //     struct I2C
@@ -120,6 +94,35 @@ namespace io_map
 //         static constexpr std::uint32_t Timeout = I2C_TIMEOUT; // in seconds
 // #endif
 //     };
+
+
+// struct MotorX : public MotorBase
+    // {
+    //     //
+    // };
+//     using MotorControlEnable = PinLocation<GPIOB, 9>;
+
+//   //TODO it should be initialized somehow different, as a StepperMotor template maybe?
+//     using MotorControlDirX   = PinLocation<GPIOB, GPIO_PIN_10>;
+//     using MotorControlStepX  = PinLocation<GPIOB, GPIO_PIN_13>;
+//     using MotorControlMsX1   = PinLocation<GPIOB, GPIO_PIN_0>;
+//     using MotorControlMsX2   = PinLocation<GPIOB, GPIO_PIN_1>;
+//     using MotorControlMsX3   = PinLocation<GPIOB, GPIO_PIN_2>;
+
+//     using MotorControlDirY   = PinLocation<GPIOB, GPIO_PIN_11>;
+//     using MotorControlStepY  = PinLocation<GPIOB, GPIO_PIN_14>;
+//     using MotorControlMsY1   = PinLocation<GPIOB, GPIO_PIN_3>;
+//     using MotorControlMsY2   = PinLocation<GPIOB, GPIO_PIN_4>;
+//     using MotorControlMsY3   = PinLocation<GPIOB, GPIO_PIN_5>;
+
+//     using MotorControlDirZ   = PinLocation<GPIOB, GPIO_PIN_12>;
+//     using MotorControlStepZ  = PinLocation<GPIOB, GPIO_PIN_15>;
+//     using MotorControlMsZ1   = PinLocation<GPIOA, GPIO_PIN_4>;
+//     using MotorControlMsZ2   = PinLocation<GPIOA, GPIO_PIN_5>;
+//     using MotorControlMsZ3   = PinLocation<GPIOA, GPIO_PIN_6>;
+
+//     using SWDIO              = PinLocation<GPIOA, GPIO_PIN_13>;
+//     using SWCLK              = PinLocation<GPIOA, GPIO_PIN_14>;
 
 }
 

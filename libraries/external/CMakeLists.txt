@@ -1,2 +1,32 @@
-# add_subdirectory(googletest)
-# FIXME: adding googletest generates weird error
+file(GLOB_RECURSE HAL_HEADERS CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
+)
+
+file(GLOB_RECURSE HAL_SOURCES CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.s
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+)
+
+add_library(${PROJECT_NAME}-hal OBJECT)
+
+target_include_directories(${PROJECT_NAME}-hal
+    SYSTEM PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/CMSIS/Device/ST/STM32F1xx/Include
+        ${CMAKE_CURRENT_SOURCE_DIR}/CMSIS/Core/Include
+        ${CMAKE_CURRENT_SOURCE_DIR}/STM32F1xx_HAL_Driver/Inc
+        ${CMAKE_CURRENT_SOURCE_DIR}/STM32F1xx_HAL_Driver/Src
+)
+
+target_compile_definitions(${PROJECT_NAME}-hal
+    PUBLIC
+        STM32F103xx
+)
+
+target_sources(${PROJECT_NAME}-hal
+    PUBLIC
+        ${HAL_HEADERS}
+    PRIVATE
+        ${HAL_SOURCES}
+)
