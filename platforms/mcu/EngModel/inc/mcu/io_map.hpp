@@ -58,7 +58,7 @@ namespace io_map
     struct UART_2 : public UARTPins<UART_2>
     {
         static constexpr std::uint32_t  Peripheral          = USART2_BASE;
-        static constexpr std::uint32_t  Baudrate            = 2400;
+        static constexpr std::uint32_t  Baudrate            = 600;
         static constexpr std::uint32_t  WordLength          = UART_WORDLENGTH_8B;
         static constexpr std::uint32_t  StopBits            = UART_STOPBITS_1;
         static constexpr std::uint32_t  ParityBits          = UART_PARITY_NONE;
@@ -68,6 +68,12 @@ namespace io_map
 
         static constexpr std::uint8_t   InterruptPriority   = 7;
         static constexpr IRQn_Type      Interrupt           = IRQn_Type::USART2_IRQn;
+
+        static constexpr IRQn_Type      DmaRxIRQn           = IRQn_Type::DMA1_Channel6_IRQn;
+        static constexpr std::uint32_t  DmaRxChannel        = DMA1_Channel6_BASE;
+
+        static constexpr IRQn_Type      DmaTxIRQn           = IRQn_Type::DMA1_Channel7_IRQn;
+        static constexpr std::uint32_t  DmaTxChannel        = DMA1_Channel7_BASE;
 
         using TX = PinLocation<GPIOA_BASE, GPIO_PIN_2>;
         using RX = PinLocation<GPIOA_BASE, GPIO_PIN_3>;

@@ -19,6 +19,7 @@
 \******************************************************************************/
 /** Standard library includes */
 #include <cstdint>
+#include <cstring>
 
 /** Hardware Abstraction Layer includes */
 #include "stm32f1xx.h"
@@ -44,6 +45,7 @@ void SetupHardware()
 	__HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_USART2_CLK_ENABLE();
     __HAL_RCC_AFIO_CLK_ENABLE();
+    __HAL_RCC_DMA1_CLK_DISABLE();
 	Main.Hardware.Initialize();
 }
 
@@ -55,22 +57,26 @@ void SetupHardware()
 /******************************************************************************\
  * 								  IRQ Handlers
 \******************************************************************************/
+extern "C" void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    huart->Instance = USART2;   //FIXME just a dummy assignement to not generate warning of unused variable
+    Main.Hardware.Pins.LedCommOk.Toggle();
+}
+
 extern "C" __attribute__((optimize("03"))) void USART2_IRQHandler(void)
 {
     Main.Hardware.Terminal.OnReceived();
 }
 
 
-/******************************************************************************\
+/************************************* *****************************************\
  * 								Main application
 \******************************************************************************/
 int main(void)
 {
-	SystemCoreClock = 8_MHz;
-	HAL_Init();
+    HAL_Init();
+    SetupHardware();
 
-	SetupHardware();
-    
-	/** @brief Events are handled with interrupts */
+    /** @note Events are handled with interrupts */
 	while(1);
 }

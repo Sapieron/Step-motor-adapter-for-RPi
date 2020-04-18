@@ -61,11 +61,12 @@ namespace drivers
 
             // void OnDma();    //FIXME add DMA functionality
         private:
-            UART_HandleTypeDef huart;
+            UART_HandleTypeDef  huart;
 
-            uint8_t buffer[1];
+            DMA_HandleTypeDef   hdma_huart_rx;
+            DMA_HandleTypeDef   hdma_huart_tx;
 
-            // extern BOARD Main;
+            uint8_t buffer[5];
         };
 
         template<typename UartPort> UART<UartPort>::UART(){}
@@ -82,16 +83,47 @@ namespace drivers
             huart.Init.HwFlowCtl       = UartPort::HwFlowCtl;
             huart.Init.OverSampling    = UartPort::OverSampling;
 
+            hdma_huart_rx.Instance = reinterpret_cast<DMA_Channel_TypeDef *>(UartPort::DmaRxChannel);
+            hdma_huart_rx.Init.Direction            = DMA_PERIPH_TO_MEMORY;
+            hdma_huart_rx.Init.MemDataAlignment     = DMA_MDATAALIGN_BYTE;
+            hdma_huart_rx.Init.MemInc               = DMA_MINC_ENABLE;
+            hdma_huart_rx.Init.Mode                 = DMA_NORMAL;
+            hdma_huart_rx.Init.PeriphDataAlignment  = DMA_PDATAALIGN_BYTE;
+            hdma_huart_rx.Init.PeriphInc            = DMA_PINC_DISABLE;
+            hdma_huart_rx.Init.Priority             = DMA_PRIORITY_LOW;
+
+            hdma_huart_tx.Instance = reinterpret_cast<DMA_Channel_TypeDef *>(UartPort::DmaTxChannel);
+            hdma_huart_tx.Init.Direction            = DMA_MEMORY_TO_PERIPH;
+            hdma_huart_tx.Init.MemDataAlignment     = DMA_MDATAALIGN_BYTE;
+            hdma_huart_tx.Init.MemInc               = DMA_MINC_ENABLE;
+            hdma_huart_tx.Init.Mode                 = DMA_NORMAL;
+            hdma_huart_tx.Init.PeriphDataAlignment  = DMA_PDATAALIGN_BYTE;
+            hdma_huart_tx.Init.PeriphInc            = DMA_PINC_DISABLE;
+            hdma_huart_tx.Init.Priority             = DMA_PRIORITY_LOW;
+
+            HAL_DMA_Init(&hdma_huart_tx);
+            HAL_DMA_Init(&hdma_huart_rx);
+
+            __HAL_LINKDMA(&huart, hdmatx, hdma_huart_tx);
+            __HAL_LINKDMA(&huart, hdmarx, hdma_huart_rx);
+
+            HAL_NVIC_SetPriority(UartPort::DmaRxIRQn, 0, 0);
+            HAL_NVIC_EnableIRQ(UartPort::DmaRxIRQn);
+
+            HAL_NVIC_SetPriority(UartPort::DmaTxIRQn, 0, 0);
+            HAL_NVIC_EnableIRQ(UartPort::DmaTxIRQn);
+
             HAL_UART_Init(&huart);
 
             HAL_NVIC_EnableIRQ(UartPort::Interrupt);
-            HAL_UART_Receive_IT(&huart, buffer, 1);
+            HAL_UART_Receive_DMA(&huart, buffer, 5);
         }
 
         template<typename UartPort>
         __attribute__((optimize("03"))) void UART<UartPort>::OnReceived()
         {
-            HAL_NVIC_ClearPendingIRQ(UartPort::Interrupt);
+            HAL_UART_IRQHandler(&huart);
+            // HAL_NVIC_ClearPendingIRQ(UartPort::Interrupt);
         }
     } // namespace uart
 } // namespace drivers

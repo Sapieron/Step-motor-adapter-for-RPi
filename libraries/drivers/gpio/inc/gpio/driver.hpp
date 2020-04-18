@@ -166,7 +166,7 @@ namespace drivers
             GPIO_InitTypeDef gpio_init;
             gpio_init.Pin = Location::PinNumber;
             gpio_init.Mode = GPIO_MODE_AF_PP;
-            gpio_init.Pull = GPIO_NOPULL;
+            gpio_init.Pull = GPIO_PULLUP;
             gpio_init.Speed = GPIO_SPEED_FREQ_HIGH;
 
             HAL_GPIO_Init(hgpio, &gpio_init);
