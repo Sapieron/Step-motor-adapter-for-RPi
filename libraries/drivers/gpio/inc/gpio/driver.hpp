@@ -24,6 +24,7 @@
  * 								Includes
 \******************************************************************************/
 #include <cstdint>
+#include <cstdbool>
 
 #include "stm32f103xb.h"
 #include "stm32f1xx_hal_gpio.h"
@@ -59,6 +60,7 @@ namespace drivers
             inline void Low()    const;
             inline void Toggle() const;
             inline bool Read()   const;
+            inline void Set(bool state) const;
 
           private:
                   GPIO_TypeDef* _port;
@@ -91,6 +93,13 @@ namespace drivers
                                     this->_pin);
         }
 
+        void Pin::Set(bool state) const
+        {
+            HAL_GPIO_WritePin(this->_port,
+                              this->_pin,
+                              static_cast<GPIO_PinState>(state) );
+        }
+
         /**
          * @brief Output pin class
          * @tparam Location Type with two static members: Port and PinNumber
@@ -118,8 +127,8 @@ namespace drivers
         void OutputPin<Location, DefaultState>::Initialize() const
         {
             GPIO_InitTypeDef gpio_init;
-            gpio_init.Mode = GPIO_MODE_OUTPUT_PP;
-            gpio_init.Pin = Location::PinNumber;
+            gpio_init.Mode  = GPIO_MODE_OUTPUT_PP;
+            gpio_init.Pin   = PinNumber;
             gpio_init.Speed = GPIO_SPEED_FREQ_LOW;
 
             GPIO_TypeDef *hgpio = reinterpret_cast<GPIO_TypeDef*>(Location::Port);
@@ -164,7 +173,7 @@ namespace drivers
             GPIO_TypeDef *hgpio =  reinterpret_cast<GPIO_TypeDef*>(Location::Port);
 
             GPIO_InitTypeDef gpio_init;
-            gpio_init.Pin = Location::PinNumber;
+            gpio_init.Pin = PinNumber;
             gpio_init.Mode = GPIO_MODE_AF_PP;
             gpio_init.Pull = GPIO_PULLUP;
             gpio_init.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -205,13 +214,43 @@ namespace drivers
             GPIO_TypeDef *hgpio = reinterpret_cast<GPIO_TypeDef*>(Port);
 
             GPIO_InitTypeDef gpio_init;
-            gpio_init.Pin   = Location::PinNumber;
+            gpio_init.Pin   = PinNumber;
             gpio_init.Speed = GPIO_SPEED_FREQ_HIGH;
             gpio_init.Pull  = GPIO_NOPULL;
             gpio_init.Mode  = GPIO_MODE_AF_INPUT;
 
             HAL_GPIO_Init(hgpio, &gpio_init);
         }
+
+        template<typename Location>
+        class CustomPin final : public Pin
+        {
+        public:
+            CustomPin();
+
+            void Initialize() const;
+
+            static constexpr auto Port      = Location::Port;
+            static constexpr auto PinNumber = Location::PinNumber;
+        };
+
+        template<typename Location>
+        CustomPin<Location>::CustomPin() : Pin(Port, PinNumber){}
+
+        template <typename Location>
+        void CustomPin<Location>::Initialize() const
+        {
+            GPIO_TypeDef *hgpio = reinterpret_cast<GPIO_TypeDef *>(Port);
+
+            GPIO_InitTypeDef hgpio_init;    //FIXME make it customizable
+            hgpio_init.Pin      = PinNumber;
+            hgpio_init.Mode     = GPIO_MODE_AF_PP;
+            hgpio_init.Pull     = GPIO_NOPULL;
+            hgpio_init.Speed    = GPIO_SPEED_FREQ_LOW;
+
+            HAL_GPIO_Init(hgpio, &hgpio_init);
+        }
+
     }//namespace gpio
 }//namespace drivers
 

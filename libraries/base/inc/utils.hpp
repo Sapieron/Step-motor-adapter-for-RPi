@@ -59,6 +59,25 @@ constexpr std::uint32_t operator"" _MHz(unsigned long long int value)
     return value * 1000_kHz;
 }
 
+/**
+ * @brief Marker - indicates value is micro seconds
+ * @param value - value to be converted
+ * @return value in microseconds
+ */
+constexpr std::uint32_t operator"" _us(unsigned long long int value)
+{
+    return value;
+}
+
+/**
+ * @brief Marker - indicates value refers to rpm
+ * @param value - value to be converted
+ * @return value in rpm
+ */
+constexpr std::uint32_t operator"" _rpm(unsigned long long int value)
+{
+    return value;
+}
 
 
 #endif /* BASE_UTILS_HPP */

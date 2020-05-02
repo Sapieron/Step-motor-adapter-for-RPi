@@ -21,6 +21,7 @@ target_link_libraries(${NAME}
     uart
     i2c
     terminal
+    a4988
 )
 
 target_generate_hex(${NAME})

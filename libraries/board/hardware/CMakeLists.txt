@@ -15,7 +15,9 @@ target_link_libraries(${NAME}
 	gpio
 	i2c
     uart
+    a4988
     terminal
+    MotorController
 )
 
 target_include_directories(${NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/inc)

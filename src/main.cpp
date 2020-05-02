@@ -44,22 +44,28 @@ void SetupHardware()
 	__HAL_RCC_GPIOA_CLK_ENABLE();      //FIXME integrate these calls into initializations
 	__HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_USART2_CLK_ENABLE();
-    __HAL_RCC_AFIO_CLK_ENABLE();
     __HAL_RCC_DMA1_CLK_DISABLE();
+    __HAL_RCC_TIM1_CLK_ENABLE();
 	Main.Hardware.Initialize();
 }
 
 /******************************************************************************\
  * 							TEMPORARY CODE TO TEST ON
 \******************************************************************************/
+#include "stm32f1xx_hal_tim.h"
 
+
+void TemporaryCodeHandler()
+{
+    // Main.Hardware.Pins.Motor_Y.Dir.High();
+}
 
 /******************************************************************************\
  * 								  IRQ Handlers
 \******************************************************************************/
 extern "C" void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    huart->Instance = USART2;   //FIXME just a dummy assignement to not generate warning of unused variable
+    UNUSED(huart);
     Main.Hardware.Pins.LedCommOk.Toggle();
 }
 
@@ -69,14 +75,33 @@ extern "C" __attribute__((optimize("03"))) void USART2_IRQHandler(void)
 }
 
 
-/************************************* *****************************************\
+extern "C" __attribute__((optimize("03"))) void HAL_SYSTICK_Callback(void)
+{
+    //TODO
+}
+
+/******************************************************************************\
  * 								Main application
 \******************************************************************************/
 int main(void)
 {
+    __disable_irq();
+    SystemCoreClock = 8_MHz;
+    SystemCoreClockUpdate();
     HAL_Init();
     SetupHardware();
 
+    SysTick_Config(SystemCoreClock / 1000); // 1kHz
+    __enable_irq();
+
+    TemporaryCodeHandler();
+
     /** @note Events are handled with interrupts */
-	while(1);
+    while (1)
+    {
+        Main.Hardware.SyncMovementController.MoveToCoordinate(40);
+        HAL_Delay(1000);
+        Main.Hardware.SyncMovementController.MoveToCoordinate(-40);
+        HAL_Delay(1000);
+    }
 }

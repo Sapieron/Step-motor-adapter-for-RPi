@@ -6,4 +6,5 @@ void BOARDHardware::Initialize()
 {
     this->Pins.Initialize();
     this->Terminal.Initialize();
+    this->SyncMovementController.Initialize();
 }

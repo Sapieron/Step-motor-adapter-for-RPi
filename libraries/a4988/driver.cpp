@@ -1,9 +1,10 @@
 /**
- * @file driver.hpp
+ * @file driver.cpp
  * @author Pawel Klisz (pawelochojec@gmail.com)
- * @brief  Terminal functions definitions
+ * @brief  Provides driver definitions for A4988 based breakout board, which is
+ *         used to control stepper motors
  * @version 0.1
- * @date 2020-04-06
+ * @date 2020-04-19
  * 
  * @copyright Copyright (c) 2020 by Pawel Klisz. All rights reserved
  * 
@@ -14,21 +15,6 @@
  * 
  */
 
-#ifndef TERMINAL_DRIVER_GPP
-#define TERMINAL_DRIVER_GPP
+#include "driver.hpp"
 
-#pragma once
-
-namespace devices
-{
-    namespace terminal
-    {
-        class Terminal
-        {
-            //TODO to be implemented
-        };
-    } // namespace terminal
-} // namespace devices
-
-
-#endif /* TERMINAL_DRIVER_GPP */
+//TODO

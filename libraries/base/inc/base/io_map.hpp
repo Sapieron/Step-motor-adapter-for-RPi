@@ -80,6 +80,24 @@ namespace io_map
         };
     };
 
+    /**
+     * @brief Base type for describing stepper motor pins location
+     * @tparam Self - typename of pins
+     */
+    template <typename Self>
+    struct MotorPins : public PinGroupTag
+    {
+        struct Group
+        {
+
+            using Pins = PinContainer<  typename Self::Dir,
+                                        typename Self::Ms1,
+                                        typename Self::Ms2,
+                                        typename Self::Ms3,
+                                        typename Self::Step>;
+        };
+    };
+
 
     /**
      * @brief Group of pins on the same port

@@ -38,28 +38,12 @@ namespace board
      *
      * @{
      */
-    //TODO add I2C functionality
-    // /** @brief Structure describing I2C pins */
-    // template <typename Location> struct I2CPins
-    // {
-    //     /** @brief SDA */
-    //     const drivers::gpio::OutputPin<typename Location::SDA> SDA;
-    //     /** @brief SCL */
-    //     const drivers::gpio::OutputPin<typename Location::SCL> SCL;
-
-    //     /** @brief Initializes I2C pins */
-    //     void Initialize() const
-    //     {
-    //         this->SDA.Initialize();
-    //         this->SCL.Initialize();
-    //     }
-    // };
 
     /** @brief Structure describing UART pins */
     template <typename Location> struct UARTPins
     {
         /** @brief TX */
-        const drivers::gpio::OutputPinAF<typename Location::TX> TX;   //FIXME maybe using TX = ... would be better?
+        const drivers::gpio::OutputPinAF<typename Location::TX> TX;
         /** @brief RX */
         const drivers::gpio::InputPinAF<typename Location::RX> RX;
         /** @brief Initializes UART pins */
@@ -70,38 +54,51 @@ namespace board
         }
     };
 
+    template <typename Location> struct MotorPins
+    {
+        const drivers::gpio::OutputPin<typename Location::Dir>      Dir;
+        const drivers::gpio::OutputPin<typename Location::Ms1>      Ms1;
+        const drivers::gpio::OutputPin<typename Location::Ms2>      Ms2;
+        const drivers::gpio::OutputPin<typename Location::Ms3>      Ms3;
+        const drivers::gpio::CustomPin<typename Location::Step>     Step;
+                                    //    typename Config::Step>       Step;
+
+        void Initialize() const
+        {
+            this->Dir.Initialize();
+            this->Ms1.Initialize();
+            this->Ms2.Initialize();
+            this->Ms3.Initialize();
+            this->Step.Initialize();
+        }
+    };
+
     /**
      * @brief Composes all used GPIO pins together
      *
      * @remark All used pin locations must derive from tags defined in template/io_map.hpp
      */
     template <typename TCommOkIndicator,
-        // typename TUART1,
-        typename TUART2
-        // typename TI2C0,
-        >
+              typename TUART2,
+              typename TMotor_X,
+              typename TMotor_Y,
+              typename TMotor_Z >
     struct BoardGPIOBase
     {
         /** @brief LedCommOk onboard green led */
         const drivers::gpio::OutputPin<TCommOkIndicator, DISABLE> LedCommOk;
 
-        /** @brief UART1 */
-        // const UARTPins<TUART1> UART_1;   //TODO not yet implemented
-
         /** @brief UART2 */
         const UARTPins<TUART2> UART_2;
 
-        // /** @brief I2C0 */
-        // const I2CPins<TI2C0> I2C_0;   //TODO not yet implemented
-
         /** @brief Motor 1 */
-        //const MOTORPins<TMOTOR1> MOTOR_1;   //TODO not yet implemented
+        const MotorPins<TMotor_X> Motor_X;
 
         /** @brief Motor 2 */
-        //const MOTORPins<TMOTOR2> MOTOR_2;   //TODO not yet implemented
+        const MotorPins<TMotor_Y> Motor_Y;
 
         /** @brief Motor 3*/
-        //const MOTORPins<TMOTOR3> MOTOR_3;   //TODO not yet implemented
+        const MotorPins<TMotor_Z> Motor_Z;
 
         /** @brief Gripper */
         //const drivers::gpio::OutputPin<TGripper, DISABLE> Gripper;   //TODO not yet implemented
@@ -110,20 +107,20 @@ namespace board
         void Initialize() const
         {
             this->LedCommOk.Initialize();
-            // this->UART_1.Initialize();
             this->UART_2.Initialize();
-            // this->I2C_0.Initialize();
+            this->Motor_X.Initialize();
+            this->Motor_Y.Initialize();
+            this->Motor_Z.Initialize();
         }
     };
 
     /** @brief Connects GPIO pins to IO map */
     using BOARDGPIO = gpio::VerifyPinsUniqueness<BoardGPIOBase,
         io_map::LedCommOk,
-        // io_map::UART_1,
-        io_map::UART_2
-        // io_map::I2C_0,
-        //io_map::XTAL
-        >;
+        io_map::UART_2,
+        io_map::Motor_X,
+        io_map::Motor_Y,
+        io_map::Motor_Z>;
 
     /** @} */
 }
