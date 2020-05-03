@@ -60,6 +60,25 @@ void TemporaryCodeHandler()
     // Main.Hardware.Pins.Motor_Y.Dir.High();
 }
 
+
+extern "C" void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+    UNUSED(htim);
+    Main.Hardware.Pins.LedCommOk.Toggle();
+}
+
+extern "C" void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
+{
+    UNUSED(htim);
+    Main.Hardware.Pins.LedCommOk.Toggle();
+}
+
+extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    UNUSED(htim);
+    Main.Hardware.Pins.LedCommOk.Toggle();
+}
+
 /******************************************************************************\
  * 								  IRQ Handlers
 \******************************************************************************/
@@ -99,9 +118,9 @@ int main(void)
     /** @note Events are handled with interrupts */
     while (1)
     {
-        Main.Hardware.SyncMovementController.MoveToCoordinate(40);
+        Main.Hardware.SyncMovementController.MoveToCoordinate(4, 4, 4);
         HAL_Delay(1000);
-        Main.Hardware.SyncMovementController.MoveToCoordinate(-40);
+        Main.Hardware.SyncMovementController.MoveToCoordinate(-4, -4, -4);
         HAL_Delay(1000);
     }
 }

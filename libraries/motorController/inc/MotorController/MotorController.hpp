@@ -18,27 +18,58 @@
 
 namespace devices
 {
-    namespace MotorController
+    namespace motorController
     {
-        template<typename MotorPort>
+        template<typename MotorPortX,
+                 typename MotorPortY,
+                 typename MotorPortZ>
         class MotorController
         {
         public:
             MotorController();
 
-            void Initialize() const;
+            void Initialize();
+
+            void MoveToCoordinate(std::int32_t X,
+                                  std::int32_t Y,
+                                  std::int32_t Z);
+        private:
+            // devices::a4988::A4988<MotorPortX> _MotorX;
+            devices::a4988::A4988<MotorPortY> _MotorY;
+            // devices::a4988::A4988<MotorPortZ> _MotorZ;
         };
 
-        template<typename MotorPort>
-        MotorController<MotorPort>::MotorController()
+        template<typename MotorPortX,
+                 typename MotorPortY,
+                 typename MotorPortZ>
+        MotorController<MotorPortX, MotorPortY, MotorPortZ>::MotorController()
         {
             //TODO
         }
 
-        template<typename MotorPort>
-        void MotorController<MotorPort>::Initialize() const
+        template<typename MotorPortX,
+                 typename MotorPortY,
+                 typename MotorPortZ>
+        void MotorController<MotorPortX, MotorPortY, MotorPortZ>::Initialize()
         {
-            //TODO
+            // _MotorX.Initialize();
+            _MotorY.Initialize();
+            // _MotorZ.Initialize();
+        }
+
+        template<typename MotorPortX,
+                 typename MotorPortY,
+                 typename MotorPortZ>
+        void MotorController<MotorPortX, MotorPortY, MotorPortZ>::MoveToCoordinate(std::int32_t X,
+                                                                                   std::int32_t Y,
+                                                                                   std::int32_t Z)
+        {
+            // _MotorX.MoveToCoordinate(X);
+            UNUSED(X);
+            _MotorY.MoveToCoordinate(Y);
+            // UNUSED(Y);
+            // _MotorZ.MoveToCoordinate(Z);
+            UNUSED(Z);
         }
     } // namespace MotorController
     

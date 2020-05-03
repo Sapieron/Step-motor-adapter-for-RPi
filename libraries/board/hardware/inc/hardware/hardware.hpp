@@ -24,7 +24,7 @@
 #include "terminal/driver.hpp"
 #include "uart/driver.hpp"
 #include "A4988/driver.hpp"
-// #include "MotorController/MotorController.hpp"
+#include "motorController/motorController.hpp"
 
 namespace board
 {
@@ -36,9 +36,9 @@ namespace board
 
         drivers::uart::UART<io_map::UART_2> Terminal;
 
-        devices::a4988::A4988<io_map::Motor_Y> SyncMovementController;
-
-        // devices::MotorController::MotorController<io_map::Motor_Y> SyncMovementController;
+        devices::motorController::MotorController<io_map::Motor_X,
+                                                  io_map::Motor_Y,
+                                                  io_map::Motor_Z> SyncMovementController;
     };
 }
 

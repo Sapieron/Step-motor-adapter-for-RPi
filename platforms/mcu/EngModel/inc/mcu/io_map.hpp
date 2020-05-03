@@ -34,10 +34,16 @@ namespace io_map
     struct Motor_X : public MotorPins<Motor_X>
     {
         using Dir   = PinLocation<GPIOB_BASE, GPIO_PIN_10>;
-        using Step  = PinLocation<GPIOB_BASE, GPIO_PIN_13>;
         using Ms1   = PinLocation<GPIOB_BASE, GPIO_PIN_0>;
         using Ms2   = PinLocation<GPIOB_BASE, GPIO_PIN_1>;
         using Ms3   = PinLocation<GPIOB_BASE, GPIO_PIN_2>;
+        using Step  = PinLocation<GPIOB_BASE, GPIO_PIN_13>;
+
+        static constexpr std::uint32_t Frequency        = 100_Hz;
+        static constexpr std::uint32_t MotorStepsPerRev = 800;
+        // static constexpr std::uint32_t TargetRPM        = 30_rpm;
+        static constexpr std::uint32_t TimerChannel = TIM_CHANNEL_1;
+        static constexpr std::uint32_t SteppingMode     = 2;
     };
 
     struct Motor_Y : public MotorPins<Motor_Y>
@@ -48,23 +54,26 @@ namespace io_map
         using Ms3   = PinLocation<GPIOB_BASE, GPIO_PIN_5>;
         using Step  = PinLocation<GPIOB_BASE, GPIO_PIN_14>;
 
-        // static constexpr std::uint32_t StepHighPulseT   = 1_us;  //FIXME are those needed?
-        // static constexpr std::uint32_t StepLowPulseT    = 1_us;
-        // static constexpr std::uint32_t WakeUpTime       = 1000_us;
         static constexpr std::uint32_t Frequency        = 100_Hz;
         static constexpr std::uint32_t MotorStepsPerRev = 800;
         // static constexpr std::uint32_t TargetRPM        = 30_rpm;
-
-        static constexpr std::uint32_t SteppingMode     = 4;    //FIXME it's a magic number! maybe create enum instead of MSTable?
+        static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_2;
+        static constexpr std::uint32_t SteppingMode     = 2;    //FIXME it's a magic number! maybe create enum instead of MSTable?
     };
 
     struct Motor_Z : public MotorPins<Motor_Z>
     {
         using Dir   = PinLocation<GPIOB_BASE, GPIO_PIN_12>;
-        using Step  = PinLocation<GPIOB_BASE, GPIO_PIN_15>;
         using Ms1   = PinLocation<GPIOA_BASE, GPIO_PIN_4>;
         using Ms2   = PinLocation<GPIOA_BASE, GPIO_PIN_5>;
         using Ms3   = PinLocation<GPIOA_BASE, GPIO_PIN_6>;
+        using Step  = PinLocation<GPIOB_BASE, GPIO_PIN_15>;
+
+        static constexpr std::uint32_t Frequency        = 100_Hz;
+        static constexpr std::uint32_t MotorStepsPerRev = 800;
+        // static constexpr std::uint32_t TargetRPM        = 30_rpm;
+        static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_3;
+        static constexpr std::uint32_t SteppingMode     = 2;
     };
 
     struct UART_2 : public UARTPins<UART_2>

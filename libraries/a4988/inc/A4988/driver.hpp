@@ -53,10 +53,12 @@ namespace devices
 
             /**
              * @brief Set the Microstepping Mode object
-             * 
-             * @param mode - must be MSTable[i] value
              */
             void SetMicrosteppingMode() const;
+
+            /**
+             * @brief InitializeTimer
+             */
             void InitializeTimer() const;
 
             int32_t _position;
@@ -109,9 +111,9 @@ namespace devices
             sConfigOP.OCNIdleState = TIM_OCNIDLESTATE_RESET;
             sConfigOP.ICSelection = TIM_OCMODE_PWM1;
 
-            HAL_TIM_OnePulse_ConfigChannel(&htim1, &sConfigOP, TIM_CHANNEL_2, TIM_CHANNEL_1);
+            HAL_TIM_OnePulse_ConfigChannel(&htim1, &sConfigOP, MotorPort::TimerChannel, TIM_CHANNEL_2); //FIXME only channel 1 and 2 can be supplied, changing approach is needed
 
-            HAL_TIMEx_OnePulseN_Start(&htim1, TIM_CHANNEL_2);   //FIXME blocking function! use DMA
+            HAL_TIMEx_OnePulseN_Start(&htim1, MotorPort::TimerChannel);   //FIXME blocking function! use DMA
         }
 
         template<typename MotorPort>
