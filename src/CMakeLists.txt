@@ -3,8 +3,7 @@ set(NAME step_motor_adapter)
 set(SOURCES
     main.cpp
     mcu/board.cpp
-    mcu/inc/mcu/board.hpp
-    mcu/inc/mcu/stm32f1xx_it.h
+    board_access.cpp
 )
 
 add_executable(${NAME} ${SOURCES})
@@ -19,9 +18,9 @@ target_link_libraries(${NAME}
     platform
     gpio
     uart
-    i2c
     terminal
     a4988
+    motorController
 )
 
 target_generate_hex(${NAME})

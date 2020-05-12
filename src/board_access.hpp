@@ -1,9 +1,9 @@
 /**
- * @file driver.cpp
+ * @file board_access.hpp
  * @author Pawel Klisz (pawelochojec@gmail.com)
  * @brief 
  * @version 0.1
- * @date 2020-04-10
+ * @date 2020-05-09
  * 
  * @copyright Copyright (c) 2020 by Pawel Klisz. All rights reserved
  * 
@@ -14,12 +14,21 @@
  * 
  */
 
-/******************************************************************************\
- * 								Includes
-\******************************************************************************/
-#include "driver.hpp"
+#ifndef BOARD_ACCESS_HPP
+#define BOARD_ACCESS_HPP
 
+/******************************************************************************\
+ * 						        Includes
+\******************************************************************************/
+#include "terminal/forward.hpp"
+// #include "motorController/forward.hpp"
 
 /******************************************************************************\
  * 						         CODE
 \******************************************************************************/
+
+devices::terminal::Terminal& GetTerminal();
+
+// devices::motorController::MotorController& GetMotorController();
+
+#endif /* BOARD_ACCESS_HPP */

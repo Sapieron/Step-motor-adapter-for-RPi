@@ -7,8 +7,8 @@ This project is a part of engineering thesis developed by [Paweł Klisz](https:/
 ## Software development
 To develop firmware for this project following tools were used:
 - [Visual Studio Code (IDE)](https://code.visualstudio.com/) - version 1.43.2
-- Embedded C++17
-- Embedded C11
+- Embedded C++20
+- Embedded C18
 - [GoogleTest](https://github.com/google/googletest) - version 1.10.x
 - [CMake](https://cmake.org/) - version 3.16.2
 - [Ninja](https://ninja-build.org/)

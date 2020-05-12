@@ -1,15 +1,16 @@
 set(NAME terminal)
 
 set(SOURCES
-    driver.cpp
-    inc/${NAME}/forward.hpp
-    inc/${NAME}/driver.hpp
+    terminal.cpp
+    inc/terminal/terminal.hpp
 )
 
 add_library(${NAME} STATIC ${SOURCES})
 
 target_link_libraries(${NAME}
     ${PROJECT_NAME}-hal
+    uart
+    base
 )
 
 target_include_directories(${NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/inc)

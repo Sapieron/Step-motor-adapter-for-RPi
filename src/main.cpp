@@ -31,6 +31,7 @@
 #include "mcu/board.hpp"
 #include "mcu/stm32f1xx_it.h"
 #include "utils.hpp"
+#include "board_access.hpp"
 
 /******************************************************************************\
  * 								Global defines
@@ -43,60 +44,52 @@ void SetupHardware()
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();      //FIXME integrate these calls into initializations
 	__HAL_RCC_GPIOB_CLK_ENABLE();
-    __HAL_RCC_USART2_CLK_ENABLE();
-    __HAL_RCC_DMA1_CLK_DISABLE();
     __HAL_RCC_TIM1_CLK_ENABLE();
 	Main.Hardware.Initialize();
 }
 
 /******************************************************************************\
- * 							TEMPORARY CODE TO TEST ON
+ * 							        Callbacks
 \******************************************************************************/
-#include "stm32f1xx_hal_tim.h"
 
-
-void TemporaryCodeHandler()
+extern "C" void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    // Main.Hardware.Pins.Motor_Y.Dir.High();
+    UNUSED(huart);
+    Main.Hardware.Terminal.CallbackHandler();
 }
 
-
-extern "C" void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+/** @brief send frame every 1000 ticks */
+int tick = 1000;
+extern "C" void HAL_SYSTICK_Callback(void)
 {
-    UNUSED(htim);
-    Main.Hardware.Pins.LedCommOk.Toggle();
+    while(! tick--)
+    {
+        GetTerminal().Puts("Test\r\n");
+        tick = 1000;
+    }
 }
 
-extern "C" void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
-{
-    UNUSED(htim);
-    Main.Hardware.Pins.LedCommOk.Toggle();
-}
-
-extern "C" void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-    UNUSED(htim);
-    Main.Hardware.Pins.LedCommOk.Toggle();
-}
 
 /******************************************************************************\
  * 								  IRQ Handlers
 \******************************************************************************/
-extern "C" void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+/** @brief USART2 IRQ Handling */
+extern "C" __attribute__((optimize("O3"))) void USART2_IRQHandler(void)
 {
-    UNUSED(huart);
+    Main.Hardware.Terminal.OnReception();
     Main.Hardware.Pins.LedCommOk.Toggle();
 }
 
-extern "C" __attribute__((optimize("03"))) void USART2_IRQHandler(void)
+/** @brief DMA1 Channel 7 - transfer reception handler */
+extern "C" __attribute__((optimize("O3"))) void DMA1_Channel6_IRQHandler(void)
 {
-    Main.Hardware.Terminal.OnReceived();
+    Main.Hardware.Terminal.OnDmaReceive();
 }
 
-
-extern "C" __attribute__((optimize("03"))) void HAL_SYSTICK_Callback(void)
+/** @brief DMA1 Channel 7 - transfer transmission handler */
+extern "C" __attribute__((optimize("O3"))) void DMA1_Channel7_IRQHandler(void)
 {
-    //TODO
+    Main.Hardware.Terminal.OnDmaTransmit();
 }
 
 /******************************************************************************\
@@ -110,17 +103,13 @@ int main(void)
     HAL_Init();
     SetupHardware();
 
-    SysTick_Config(SystemCoreClock / 1000); // 1kHz
+    /** @brief Generate interrupt with 1kHz rate */
+    SysTick_Config(SystemCoreClock / 1_kHz);
     __enable_irq();
-
-    TemporaryCodeHandler();
 
     /** @note Events are handled with interrupts */
     while (1)
     {
-        Main.Hardware.SyncMovementController.MoveToCoordinate(4, 4, 4);
-        HAL_Delay(1000);
-        Main.Hardware.SyncMovementController.MoveToCoordinate(-4, -4, -4);
-        HAL_Delay(1000);
+        /** @remark nothing to do here */
     }
 }

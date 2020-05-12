@@ -13,7 +13,6 @@ target_link_libraries(${NAME}
 	platform
 	base
 	gpio
-	i2c
     uart
     a4988
     terminal

@@ -111,7 +111,7 @@ namespace devices
             sConfigOP.OCNIdleState = TIM_OCNIDLESTATE_RESET;
             sConfigOP.ICSelection = TIM_OCMODE_PWM1;
 
-            HAL_TIM_OnePulse_ConfigChannel(&htim1, &sConfigOP, MotorPort::TimerChannel, TIM_CHANNEL_2); //FIXME only channel 1 and 2 can be supplied, changing approach is needed
+            HAL_TIM_OnePulse_ConfigChannel(&htim1, &sConfigOP, MotorPort::TimerChannel, TIM_CHANNEL_4); //FIXME only channel 1 and 2 can be supplied, changing approach is needed
 
             HAL_TIMEx_OnePulseN_Start(&htim1, MotorPort::TimerChannel);   //FIXME blocking function! use DMA
         }

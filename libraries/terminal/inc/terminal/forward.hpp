@@ -13,3 +13,11 @@
  * This project can be found on https://github.com/Sapieron/Step-motor-adapter-for-RPi
  * 
  */
+
+namespace devices
+{
+    namespace terminal
+    {
+        class Terminal;
+    } // namespace terminal
+} // namespace devices

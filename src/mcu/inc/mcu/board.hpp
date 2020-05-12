@@ -15,21 +15,29 @@
  */
 
 #include "hardware/hardware.hpp"
+#include "terminal/terminal.hpp"
+// #include "motorController/motorController.hpp"
 
 /**
  * @brief Object describing global BOARD state and drivers
  */
 struct BOARD
 {
-    public:
-        BOARD();
+public:
+    BOARD();
 
-    /** @brief OBC hardware */
+    /** @brief BOARD hardware */
     board::BOARDHardware Hardware;
+
+    /** @brief Terminal object */
+    devices::terminal::Terminal terminal;
+
+    /** @brief motorController object */
+    // devices::motorController::MotorController<> motorController;
 };
 
 /**
- * @brief Global OBC object
+ * @brief Global BOARD object
  * 
  */
 extern BOARD Main;

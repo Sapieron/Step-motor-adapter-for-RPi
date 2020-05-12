@@ -14,21 +14,35 @@
  * 
  */
 
-#ifndef TERMINAL_DRIVER_GPP
-#define TERMINAL_DRIVER_GPP
+#ifndef TERMINAL_DRIVER_HPP
+#define TERMINAL_DRIVER_HPP
 
 #pragma once
+
+#include "line_io.hpp"
 
 namespace devices
 {
     namespace terminal
     {
-        class Terminal
+        class Terminal : public ILineIO
         {
-            //TODO to be implemented
+        public:
+            Terminal(ILineIO& stdio);
+            ~Terminal() = default;
+
+            void Initialize();
+
+            // void SetCommandList(commands);
+
+            virtual void Puts(const char* text) override; //FIXME has to be inline, as definition can't be contained in .cpp file - bug to fix
+
+            // void Read();
+        private:
+            ILineIO& _stdio;
         };
     } // namespace terminal
 } // namespace devices
 
 
-#endif /* TERMINAL_DRIVER_GPP */
+#endif /* TERMINAL_DRIVER_HPP */

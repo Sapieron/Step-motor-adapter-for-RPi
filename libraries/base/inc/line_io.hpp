@@ -1,9 +1,9 @@
 /**
- * @file blink.hpp
+ * @file line_io.hpp
  * @author Pawel Klisz (pawelochojec@gmail.com)
- * @brief //TODO move blinking here
+ * @brief Line based interface
  * @version 0.1
- * @date 2020-04-06
+ * @date 2020-05-10
  * 
  * @copyright Copyright (c) 2020 by Pawel Klisz. All rights reserved
  * 
@@ -14,11 +14,20 @@
  * 
  */
 
-namespace function
+#ifndef LINE_IO_BASE_HPP
+#define LINE_IO_BASE_HPP
+
+
+class ILineIO
 {
-    template<typename ledToBlink, typename time, typename frequency>
-    struct blink
-    {
-        //TODO use TIM6 to toggle the led
-    };
-} // namespace blink
+public:
+    ILineIO() = default;
+    ~ILineIO() = default;
+    
+    virtual void Puts(const char* text) = 0;
+
+    // virtual void Read(span) = 0; //TODO add span library
+};
+
+
+#endif /* LINE_IO_BASE_HPP */

@@ -2,10 +2,6 @@ set(COMM_SECURITY_CODE "0xBBCCDDEE" CACHE STRING "32-bit COMM security code writ
 
 add_definitions(-DSTM32F103CB)
 
-# if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-#     add_definitions(-DUSE_FULL_ASSERT)
-# endif()
-
 set (ARCH cortex-m3)
 set (CHIP STM32F103CB)
 set (DEVICE STM32F103CBTx)
@@ -24,9 +20,9 @@ set (CWARN "-Wall -Wstrict-prototypes -Wextra -Werror -Wno-unused-parameter")
 set (CXXWARN "-Wall -Wextra -Werror")
 set (CTUNING "-ggdb -pedantic -fomit-frame-pointer -ffunction-sections -fdata-sections")
 set (CMCU "-mtune=cortex-m3 -MMD -MP -mcpu=cortex-m3 -mthumb -march=armv7-m -mlittle-endian -mfix-cortex-m3-ldrd -mno-thumb-interwork")
-set (CMAKE_C_FLAGS "-std=c11 ${CWARN} ${CTUNING} ${CMCU} ${CCOVERAGE}")
-set (CMAKE_CXX_FLAGS "-std=c++17 -fno-exceptions -fno-rtti ${CXXWARN} ${CTUNING} ${CMCU} ${CCOVERAGE}")
-set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_C_FLAGS "-std=c18 ${CWARN} ${CTUNING} ${CMCU} ${CCOVERAGE}")
+set (CMAKE_CXX_FLAGS "-std=c++2a -fno-exceptions -fno-rtti ${CXXWARN} ${CTUNING} ${CMCU} ${CCOVERAGE}")
+set (CMAKE_CXX_STANDARD 20)
 
 set(DEBUG_COMP_OPTIONS "-DDEBUG -Og -O0 -g")
 set(RELEASE_COMP_OPTIONS "-DNDEBUG -O2 ${LTO_SWITCH}")

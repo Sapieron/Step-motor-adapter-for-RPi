@@ -21,8 +21,8 @@
 #pragma once
 
 #include "gpio.hpp"
-#include "terminal/driver.hpp"
-#include "uart/driver.hpp"
+#include "terminal/terminal.hpp"
+#include "uart/uart.hpp"
 #include "A4988/driver.hpp"
 #include "motorController/motorController.hpp"
 
