@@ -65,6 +65,8 @@ namespace drivers
           private:
                   GPIO_TypeDef* _port;
             const std::uint16_t _pin;
+
+            void ClockEnable();
         };
 
         void Pin::High() const
@@ -222,7 +224,7 @@ namespace drivers
             HAL_GPIO_Init(hgpio, &gpio_init);
         }
 
-        template<typename Location>
+        template<typename Location, typename Options>
         class CustomPin final : public Pin
         {
         public:
@@ -234,19 +236,19 @@ namespace drivers
             static constexpr auto PinNumber = Location::PinNumber;
         };
 
-        template<typename Location>
-        CustomPin<Location>::CustomPin() : Pin(Port, PinNumber){}
+        template<typename Location, typename Options>
+        CustomPin<Location, Options>::CustomPin() : Pin(Port, PinNumber){}
 
-        template <typename Location>
-        void CustomPin<Location>::Initialize() const
+        template <typename Location, typename Options>
+        void CustomPin<Location, Options>::Initialize() const
         {
             GPIO_TypeDef *hgpio = reinterpret_cast<GPIO_TypeDef *>(Port);
 
-            GPIO_InitTypeDef hgpio_init;    //FIXME make it customizable
+            GPIO_InitTypeDef hgpio_init;
             hgpio_init.Pin      = PinNumber;
-            hgpio_init.Mode     = GPIO_MODE_AF_PP;
-            hgpio_init.Pull     = GPIO_NOPULL;
-            hgpio_init.Speed    = GPIO_SPEED_FREQ_LOW;
+            hgpio_init.Mode     = Options::Mode;
+            hgpio_init.Pull     = Options::Pull;
+            hgpio_init.Speed    = Options::Speed;
 
             HAL_GPIO_Init(hgpio, &hgpio_init);
         }

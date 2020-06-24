@@ -21,7 +21,7 @@
  * 						        Includes
 \******************************************************************************/
 #include "terminal/forward.hpp"
-// #include "motorController/forward.hpp"
+#include "motorController/forward.hpp"
 
 /******************************************************************************\
  * 						         CODE
@@ -29,6 +29,13 @@
 
 devices::terminal::Terminal& GetTerminal();
 
-// devices::motorController::MotorController& GetMotorController();
+// inline auto& GetMotorController()
+// {
+//     return Main.motorController;
+// }
 
+// inline auto& GetLedCommOk()
+// {
+//     return Main.Hardware.Pins.LedCommOk;
+// }
 #endif /* BOARD_ACCESS_HPP */

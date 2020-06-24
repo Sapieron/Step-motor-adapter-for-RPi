@@ -1,8 +1,7 @@
 set(NAME a4988)
 
 set(SOURCES
-    driver.cpp
-    inc/${NAME}/driver.hpp
+    inc/${NAME}/${NAME}.hpp
 )
 
 add_library(${NAME} STATIC ${SOURCES})

@@ -32,8 +32,10 @@ public:
     /** @brief Terminal object */
     devices::terminal::Terminal terminal;
 
-    /** @brief motorController object */
-    // devices::motorController::MotorController<> motorController;
+    // /** @brief motorController object */
+    // devices::motorController::MotorController<io_map::Motor_X,
+    //                                           io_map::Motor_Y,
+    //                                           io_map::Motor_Z> motorController;  //TODO It has to instantiate other class
 };
 
 /**

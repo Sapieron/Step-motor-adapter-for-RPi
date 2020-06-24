@@ -40,12 +40,26 @@
 BOARD Main;
 
 
-void SetupHardware()
+
+/******************************************************************************\
+ * 								Main application
+\******************************************************************************/
+int main(void)
 {
-	__HAL_RCC_GPIOA_CLK_ENABLE();      //FIXME integrate these calls into initializations
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-    __HAL_RCC_TIM1_CLK_ENABLE();
-	Main.Hardware.Initialize();
+    __disable_irq();
+
+    HAL_Init();
+    Main.Hardware.Initialize();
+
+    /** @brief Generate interrupt with 1kHz rate */
+    SysTick_Config(SystemCoreClock / 1_kHz);    //TODO move it to clock module?
+    __enable_irq();
+
+    /** @note Events are handled with interrupts */
+    while (1)
+    {
+        /** @remark nothing to do here */
+    }
 }
 
 /******************************************************************************\
@@ -55,17 +69,25 @@ void SetupHardware()
 extern "C" void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     UNUSED(huart);
+    Main.Hardware.Pins.LedCommOk.High();
     Main.Hardware.Terminal.CallbackHandler();
 }
 
+extern "C" void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
+{
+    UNUSED(huart);
+    Main.Hardware.Pins.LedCommOk.Low();
+}
+
 /** @brief send frame every 1000 ticks */
-int tick = 1000;
+int tick = 2000;
 extern "C" void HAL_SYSTICK_Callback(void)
 {
     while(! tick--)
     {
         GetTerminal().Puts("Test\r\n");
-        tick = 1000;
+        Main.Hardware.SyncMovementController.Rotate(40, 40, 20);    //FIXME use GetSyncMovementContoller() interface, hardware.syncmove SHOULDNT EXIST
+        tick = 2000;
     }
 }
 
@@ -77,7 +99,6 @@ extern "C" void HAL_SYSTICK_Callback(void)
 extern "C" __attribute__((optimize("O3"))) void USART2_IRQHandler(void)
 {
     Main.Hardware.Terminal.OnReception();
-    Main.Hardware.Pins.LedCommOk.Toggle();
 }
 
 /** @brief DMA1 Channel 7 - transfer reception handler */
@@ -92,24 +113,32 @@ extern "C" __attribute__((optimize("O3"))) void DMA1_Channel7_IRQHandler(void)
     Main.Hardware.Terminal.OnDmaTransmit();
 }
 
-/******************************************************************************\
- * 								Main application
-\******************************************************************************/
-int main(void)
+extern "C" __attribute__((optimize("O1"))) void TIM2_IRQHandler(void)
 {
-    __disable_irq();
-    SystemCoreClock = 8_MHz;
-    SystemCoreClockUpdate();
-    HAL_Init();
-    SetupHardware();
-
-    /** @brief Generate interrupt with 1kHz rate */
-    SysTick_Config(SystemCoreClock / 1_kHz);
-    __enable_irq();
-
-    /** @note Events are handled with interrupts */
-    while (1)
+    // Main.Hardware.MotorX.OnInterrupt(); //TODO make this handling work
+    if ((TIM2->SR &= TIM_SR_UIF) == 0b1)
     {
-        /** @remark nothing to do here */
+        TIM2->SR &= ~(TIM_SR_UIF);
     }
+
+    /** @brief commutation update control */
+    /* Reset the OC1M bits in the CCMR1 register */
+    TIM1->CCMR1 &= TIM_CCMR1_OC2M;
+    /* configure the OC1M bits in the CCMRx register to inactive mode*/
+    TIM1->CCMR1 |= TIM_OCMODE_FORCED_INACTIVE;
+}
+
+extern "C" __attribute__((optimize("O1"))) void TIM4_IRQHandler(void)
+{
+    // Main.Hardware.MotorX.OnInterrupt(); //TODO make this handling work
+    if ((TIM4->SR &= TIM_SR_UIF) == 0b1)
+    {
+        TIM4->SR &= ~(TIM_SR_UIF);
+    }
+
+    /** @brief commutation update control */
+    /* Reset the OC1M bits in the CCMR1 register */
+    TIM3->CCMR1 &= TIM_CCMR1_OC2M;
+    /* configure the OC1M bits in the CCMRx register to inactive mode*/
+    TIM3->CCMR1 |= TIM_OCMODE_FORCED_INACTIVE;
 }

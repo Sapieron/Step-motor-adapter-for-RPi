@@ -59,21 +59,27 @@ namespace drivers
 
             // void Read();
 
-            virtual void Puts(const char* testerVar) override;
+            /** @brief Outputs given string to connected UART peripheral */
+            virtual void Puts(const char* text) override;
 
+            /** @brief DMA reception handler */
             void OnDmaReceive();
 
+            /** @brief DMA transmission handler */
             void OnDmaTransmit();
 
+            /** @brief  */
             void CallbackHandler();
-
 
         private:
             UART_HandleTypeDef  _huart;
 
             DMA_HandleTypeDef   _hdma_huart_rx;
             DMA_HandleTypeDef   _hdma_huart_tx;
+
             void InitializeDma();
+
+            void ClockUartEnable() const;
 
             std::uint8_t _rxBuffer[21];
         };
@@ -84,7 +90,7 @@ namespace drivers
         void UART<UartPort>::Initialize()
         {
             this->InitializeDma();
-            __HAL_RCC_USART2_CLK_ENABLE();
+            this->ClockUartEnable();
 
             _huart.Instance = reinterpret_cast<USART_TypeDef *>(UartPort::Peripheral);
             _huart.Init.BaudRate        = UartPort::Baudrate;
@@ -160,13 +166,40 @@ namespace drivers
         template<typename UartPort>
         void UART<UartPort>::CallbackHandler()
         {
-            HAL_UART_Receive_DMA(&_huart, _rxBuffer, sizeof(_rxBuffer));   //wait for frames again
+            HAL_UART_Receive_DMA(&_huart, _rxBuffer, sizeof(_rxBuffer));
         }
 
         template<typename UartPort>
         void UART<UartPort>::Puts(const char* text)
         {
             HAL_UART_Transmit_DMA(&_huart, (uint8_t *)text, strlen(text));
+        }
+
+        template <typename UartPort>
+        void UART<UartPort>::ClockUartEnable() const
+        {
+            constexpr auto selectedClock = UartPort::Peripheral;
+
+            switch(selectedClock)
+            {
+                #ifdef USART1_BASE
+                case USART1_BASE:
+                    __HAL_RCC_USART1_CLK_ENABLE();
+                    break;
+                    #endif /*USART1_BASE */
+
+                #ifdef USART2_BASE
+                case USART2_BASE:
+                    __HAL_RCC_USART2_CLK_ENABLE();
+                    break;
+                #endif /*USART2_BASE */
+
+                #ifdef USART3_BASE
+                case USART3_BASE:
+                    __HAL_RCC_USART3_CLK_ENABLE();
+                    break;
+                #endif /*USART3_BASE */
+            }
         }
     } // namespace uart
 } // namespace drivers

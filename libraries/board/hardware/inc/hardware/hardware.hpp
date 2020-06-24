@@ -20,17 +20,29 @@
 
 #pragma once
 
+/******************************************************************************\
+ *                             Includes
+\******************************************************************************/
 #include "gpio.hpp"
 #include "terminal/terminal.hpp"
 #include "uart/uart.hpp"
-#include "A4988/driver.hpp"
+#include "A4988/A4988.hpp"
 #include "motorController/motorController.hpp"
 
+#include "base/clock.hpp"
+#include "mcu/config.hpp"
+
+
+/******************************************************************************\
+ *                             Code
+\******************************************************************************/
 namespace board
 {
     struct BOARDHardware final
     {
         void Initialize();
+
+        config::clock::Clock<config::Clock> ClockHandler;
 
         BOARDGPIO Pins;
 
@@ -43,5 +55,7 @@ namespace board
 }
 
 
-
+/******************************************************************************\
+ *                             End of file
+\******************************************************************************/
 #endif /* MCU_HARDWARE_HPP */
