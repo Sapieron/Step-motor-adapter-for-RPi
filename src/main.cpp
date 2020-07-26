@@ -15,7 +15,7 @@
  */
 
 /******************************************************************************\
- * 								Includes
+ *                                 Includes
 \******************************************************************************/
 /** Standard library includes */
 #include <cstdint>
@@ -49,7 +49,7 @@ void SetupHardware()
 }
 
 /******************************************************************************\
- * 							        Callbacks
+ *                                 Callbacks
 \******************************************************************************/
 
 extern "C" void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -71,29 +71,29 @@ extern "C" void HAL_SYSTICK_Callback(void)
 
 
 /******************************************************************************\
- * 								  IRQ Handlers
+ *                               IRQ Handlers
 \******************************************************************************/
 /** @brief USART2 IRQ Handling */
-extern "C" __attribute__((optimize("O3"))) void USART2_IRQHandler(void)
+extern "C" __attribute__((optimize("O3"))) void USART3_IRQHandler(void)
 {
     Main.Hardware.Terminal.OnReception();
     Main.Hardware.Pins.LedCommOk.Toggle();
 }
 
-/** @brief DMA1 Channel 7 - transfer reception handler */
-extern "C" __attribute__((optimize("O3"))) void DMA1_Channel6_IRQHandler(void)
+/** @brief DMA1 Channel 3 - transfer reception handler */
+extern "C" __attribute__((optimize("O3"))) void DMA1_Channel3_IRQHandler(void)
 {
     Main.Hardware.Terminal.OnDmaReceive();
 }
 
-/** @brief DMA1 Channel 7 - transfer transmission handler */
-extern "C" __attribute__((optimize("O3"))) void DMA1_Channel7_IRQHandler(void)
+/** @brief DMA1 Channel 2 - transfer transmission handler */
+extern "C" __attribute__((optimize("O3"))) void DMA1_Channel2_IRQHandler(void)
 {
     Main.Hardware.Terminal.OnDmaTransmit();
 }
 
 /******************************************************************************\
- * 								Main application
+ *                           Main application
 \******************************************************************************/
 int main(void)
 {

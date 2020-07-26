@@ -1,6 +1,7 @@
 set(NAME step_motor_adapter)
 
 set(SOURCES
+    ${STARTUP_FILE}
     main.cpp
     mcu/board.cpp
     board_access.cpp

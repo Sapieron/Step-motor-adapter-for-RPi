@@ -1,10 +1,10 @@
 set(COMM_SECURITY_CODE "0xBBCCDDEE" CACHE STRING "32-bit COMM security code written in hex with leading 0x")
 
-add_definitions(-DSTM32F103VG -DSTM32F103xG)
+add_definitions(-DSTM32F103RB -DSTM32F103xB)
 
 set (ARCH cortex-m3)
-set (CHIP STM32F103VG)
-set (DEVICE STM32F103VGTx)
+set (CHIP STM32F103XB)
+set (DEVICE STM32F103RBTx)
 
 if(${ENABLE_COVERAGE})
     set (CCOVERAGE "-fprofile-arcs -ftest-coverage")
@@ -34,6 +34,6 @@ set(CMAKE_CXX_FLAGS_DEBUG ${DEBUG_COMP_OPTIONS})
 set(CMAKE_C_FLAGS_RELEASE ${RELEASE_COMP_OPTIONS})
 set(CMAKE_CXX_FLAGS_RELEASE ${RELEASE_COMP_OPTIONS})
 
-set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/libraries/external/STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/linker/STM32F103XG_FLASH.ld)
-set(STARTUP_FILE  ${CMAKE_SOURCE_DIR}/libraries/external/STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/startup_stm32f103xg.s)
+set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/libraries/external/STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/linker/STM32F103XB_FLASH.ld)
+set(STARTUP_FILE  ${CMAKE_SOURCE_DIR}/libraries/external/STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/startup_stm32f103xb.s)
 set(BASE_ADDRESS_MCU 0x20000000)

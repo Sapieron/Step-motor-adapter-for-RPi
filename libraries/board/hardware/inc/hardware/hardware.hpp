@@ -34,7 +34,7 @@ namespace board
 
         BOARDGPIO Pins;
 
-        drivers::uart::UART<io_map::UART_2> Terminal;
+        drivers::uart::UART<io_map::UART_3> Terminal;
 
         devices::motorController::MotorController<io_map::Motor_X,
                                                   io_map::Motor_Y,

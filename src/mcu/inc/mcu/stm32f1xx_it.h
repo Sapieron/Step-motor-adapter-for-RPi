@@ -22,7 +22,7 @@
  extern "C" {
 #endif 
 
-#include "stm32f1xx_hal.h"
+#include "TargetsDefines.hpp"
 
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/

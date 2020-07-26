@@ -1,5 +1,9 @@
 /build/
 
+/CMakeFiles
+
+CMakeCache.txt
+
 /.vscode/*
 !/.vscode/cmake-kits.json
 !/.vscode/cmake-variants.json

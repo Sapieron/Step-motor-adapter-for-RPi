@@ -26,8 +26,7 @@
 #include <cstdint>
 #include <cstdbool>
 
-#include "stm32f103xb.h"
-#include "stm32f1xx_hal_gpio.h"
+#include "TargetsDefines.hpp"
 
 /******************************************************************************\
  * 								Includes

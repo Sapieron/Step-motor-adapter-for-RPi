@@ -20,9 +20,7 @@
 
 #pragma once
 
-#include "stm32f1xx_hal_gpio.h"
-#include "stm32f1xx_hal_rcc.h"
-
+#include "TargetsDefines.hpp"
 
 #include "gpio/forward.hpp"
 #include "gpio/driver.hpp"
@@ -79,7 +77,7 @@ namespace board
      * @remark All used pin locations must derive from tags defined in template/io_map.hpp
      */
     template <typename TCommOkIndicator,
-              typename TUART2,
+              typename TUART3,
               typename TMotor_X,
               typename TMotor_Y,
               typename TMotor_Z >
@@ -89,7 +87,7 @@ namespace board
         const drivers::gpio::OutputPin<TCommOkIndicator, DISABLE> LedCommOk;
 
         /** @brief UART2 */
-        const UARTPins<TUART2> UART_2;
+        const UARTPins<TUART3> UART_3;
 
         /** @brief Motor 1 */
         const MotorPins<TMotor_X> Motor_X;
@@ -107,7 +105,7 @@ namespace board
         void Initialize() const
         {
             this->LedCommOk.Initialize();
-            this->UART_2.Initialize();
+            this->UART_3.Initialize();
             this->Motor_X.Initialize();
             this->Motor_Y.Initialize();
             this->Motor_Z.Initialize();
@@ -117,7 +115,7 @@ namespace board
     /** @brief Connects GPIO pins to IO map */
     using BOARDGPIO = gpio::VerifyPinsUniqueness<BoardGPIOBase,
         io_map::LedCommOk,
-        io_map::UART_2,
+        io_map::UART_3,
         io_map::Motor_X,
         io_map::Motor_Y,
         io_map::Motor_Z>;

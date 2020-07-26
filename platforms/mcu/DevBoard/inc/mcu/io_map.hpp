@@ -1,9 +1,9 @@
 /**
  * @file io_map.hpp
  * @author Pawel Klisz (pawelochojec@gmail.com)
- * @brief This file contains peripheral pin's definitions specific for Engineering Model
+ * @brief This file contains peripheral pins' definitions specific for development board (nucleo 103RB)
  * @version 0.1
- * @date 2020-03-14
+ * @date 2020-07-25
  * 
  * @copyright Copyright (c) 2020 by Pawel Klisz. All rights reserved
  * 
@@ -14,8 +14,8 @@
  * 
  */
 
-#ifndef ENG_MODEL_MCU_IO_MAP_HPP
-#define ENG_MODEL_MCU_IO_MAP_HPP
+#ifndef DEV_BOARD_MCU_IO_MAP_HPP
+#define DEV_BOARD_MCU_IO_MAP_HPP
 
 #include <cstdint>
 
@@ -26,52 +26,52 @@
 
 namespace io_map
 {
-    using LedCommOk = PinLocation<GPIOC_BASE, GPIO_PIN_7>;
+    using LedCommOk = PinLocation<GPIOA_BASE, GPIO_PIN_0>;
 
-    using MotorControlEnable = PinLocation<GPIOA_BASE, GPIO_PIN_9>;
+    using MotorControlEnable = PinLocation<GPIOB, 9>;
 
     struct Motor_X : public MotorPins<Motor_X>
     {
-        using Dir   = PinLocation<GPIOB_BASE, GPIO_PIN_13>;
-        using Ms1   = PinLocation<GPIOC_BASE, GPIO_PIN_0>;
-        using Ms2   = PinLocation<GPIOC_BASE, GPIO_PIN_1>;
-        using Ms3   = PinLocation<GPIOC_BASE, GPIO_PIN_2>;
+        using Dir   = PinLocation<GPIOB_BASE, GPIO_PIN_10>;
+        using Ms1   = PinLocation<GPIOB_BASE, GPIO_PIN_0>;
+        using Ms2   = PinLocation<GPIOB_BASE, GPIO_PIN_1>;
+        using Ms3   = PinLocation<GPIOB_BASE, GPIO_PIN_2>;
         using Step  = PinLocation<GPIOC_BASE, GPIO_PIN_6>;
 
         static constexpr std::uint32_t Frequency        = 100_Hz;
         static constexpr std::uint32_t MotorStepsPerRev = 800;
-        // static constexpr std::uint32_t Timer = TIM8;
-        static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_1;
+        // static constexpr std::uint32_t TargetRPM        = 30_rpm;
+        static constexpr std::uint32_t TimerChannel = TIM_CHANNEL_1;
         static constexpr std::uint32_t SteppingMode     = 2;
     };
 
     struct Motor_Y : public MotorPins<Motor_Y>
     {
-        using Dir   = PinLocation<GPIOB_BASE, GPIO_PIN_0>;
-        using Ms1   = PinLocation<GPIOC_BASE, GPIO_PIN_3>;
-        using Ms2   = PinLocation<GPIOC_BASE, GPIO_PIN_4>;
-        using Ms3   = PinLocation<GPIOC_BASE, GPIO_PIN_5>;
+        using Dir   = PinLocation<GPIOB_BASE, GPIO_PIN_11>;
+        using Ms1   = PinLocation<GPIOB_BASE, GPIO_PIN_3>;
+        using Ms2   = PinLocation<GPIOB_BASE, GPIO_PIN_4>;
+        using Ms3   = PinLocation<GPIOB_BASE, GPIO_PIN_5>;
         using Step  = PinLocation<GPIOA_BASE, GPIO_PIN_8>;
 
         static constexpr std::uint32_t Frequency        = 100_Hz;
         static constexpr std::uint32_t MotorStepsPerRev = 800;
-        // static constexpr std::uint32_t Timer = TIM1;
-        static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_1;
+        // static constexpr std::uint32_t TargetRPM        = 30_rpm;
+        static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_2;
         static constexpr std::uint32_t SteppingMode     = 2;    //FIXME it's a magic number! maybe create enum instead of MSTable?
     };
 
     struct Motor_Z : public MotorPins<Motor_Z>
     {
-        using Dir   = PinLocation<GPIOB_BASE, GPIO_PIN_15>;
-        using Ms1   = PinLocation<GPIOC_BASE, GPIO_PIN_11>;
-        using Ms2   = PinLocation<GPIOC_BASE, GPIO_PIN_12>;
-        using Ms3   = PinLocation<GPIOC_BASE, GPIO_PIN_13>;
+        using Dir   = PinLocation<GPIOB_BASE, GPIO_PIN_12>;
+        using Ms1   = PinLocation<GPIOA_BASE, GPIO_PIN_4>;
+        using Ms2   = PinLocation<GPIOA_BASE, GPIO_PIN_5>;
+        using Ms3   = PinLocation<GPIOA_BASE, GPIO_PIN_6>;
         using Step  = PinLocation<GPIOB_BASE, GPIO_PIN_14>;
 
         static constexpr std::uint32_t Frequency        = 100_Hz;
         static constexpr std::uint32_t MotorStepsPerRev = 800;
-        // static constexpr std::uint32_t Timer = TIM12;
-        static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_1;
+        // static constexpr std::uint32_t TargetRPM        = 30_rpm;
+        static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_3;
         static constexpr std::uint32_t SteppingMode     = 2;
     };
 
@@ -100,4 +100,4 @@ namespace io_map
     };
 }
 
-#endif /* ENG_MODEL_MCU_IO_MAP_HPP */
+#endif /* DEV_BOARD_MCU_IO_MAP_HPP */

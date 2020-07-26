@@ -14,8 +14,8 @@
  * 
  */
 
-#include "stm32f1xx_hal.h"
-#include "stm32f103xb.h"
+#include "TargetsDefines.hpp"
+
 #include <cstdint>
 
 using std::uint32_t;

@@ -5,13 +5,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Cortex Debug",
+            "name": "EngModel debugging",
             "cwd": "${workspaceRoot}",
             "executable": "${workspaceRoot}/build/build/EngModel/bin/step_motor_adapter",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "jlink",
-            "device": "STM32F103CB",
+            "device": "STM32F103VG",
+            "interface": "swd",
+            "svdFile": "STM32F103.svd",
+            "postLaunchCommands": [
+                "b main",
+                "continue",
+            ]
+        },
+        {
+            "name": "DevBoard debugging",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/build/DevBoard/bin/step_motor_adapter",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32F103RB",
             "interface": "swd",
             "svdFile": "STM32F103.svd",
             "postLaunchCommands": [
