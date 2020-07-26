@@ -37,8 +37,15 @@ namespace io_map
         using Ms2   = PinLocation<GPIOC_BASE, GPIO_PIN_1>;
         using Ms3   = PinLocation<GPIOC_BASE, GPIO_PIN_2>;
         using Step  = PinLocation<GPIOC_BASE, GPIO_PIN_6>;
+        using Step  = PinLocation<GPIOA_BASE, GPIO_PIN_8>;
 
-        static constexpr std::uint32_t Frequency        = 100_Hz;
+        static constexpr std::uint32_t OutputSlaveTimer = TIM1_BASE;
+        static constexpr std::uint32_t MasterTimer      = TIM2_BASE;
+        static constexpr IRQn_Type     MasterTimerIRQn  = IRQn_Type::TIM2_IRQn;
+
+        static constexpr std::uint32_t DutyCycleInPercent = 10_percent;
+
+        static constexpr std::uint32_t Frequency        = 200_Hz;
         static constexpr std::uint32_t MotorStepsPerRev = 800;
         // static constexpr std::uint32_t Timer = TIM8;
         static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_1;
@@ -52,8 +59,15 @@ namespace io_map
         using Ms2   = PinLocation<GPIOC_BASE, GPIO_PIN_4>;
         using Ms3   = PinLocation<GPIOC_BASE, GPIO_PIN_5>;
         using Step  = PinLocation<GPIOA_BASE, GPIO_PIN_8>;
+        using Step  = PinLocation<GPIOA_BASE, GPIO_PIN_6>;  //TODO temporary, to check if tim3 is outputting
 
-        static constexpr std::uint32_t Frequency        = 100_Hz;
+        static constexpr std::uint32_t OutputSlaveTimer = TIM3_BASE;
+        static constexpr std::uint32_t MasterTimer      = TIM4_BASE;
+        static constexpr IRQn_Type     MasterTimerIRQn  = IRQn_Type::TIM4_IRQn;
+
+        static constexpr std::uint32_t DutyCycleInPercent = 10_percent;
+
+        static constexpr std::uint32_t Frequency        = 200_Hz;
         static constexpr std::uint32_t MotorStepsPerRev = 800;
         // static constexpr std::uint32_t Timer = TIM1;
         static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_1;

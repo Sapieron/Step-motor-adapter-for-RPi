@@ -14,12 +14,14 @@
  * 
  */
 
-#include "A4988/driver.hpp"
+#include "A4988/A4988.hpp"
 
 namespace devices
 {
     namespace motorController
     {
+        using std::int32_t;
+
         template<typename MotorPortX,
                  typename MotorPortY,
                  typename MotorPortZ>
@@ -30,11 +32,15 @@ namespace devices
 
             void Initialize();
 
-            void MoveToCoordinate(std::int32_t X,
-                                  std::int32_t Y,
-                                  std::int32_t Z);
+            void MoveToCoordinate(int32_t X,
+                                  int32_t Y,
+                                  int32_t Z);
+
+            void Rotate(int32_t X,
+                        int32_t Y,
+                        int32_t Z);
         private:
-            // devices::a4988::A4988<MotorPortX> _MotorX;
+            devices::a4988::A4988<MotorPortX> _MotorX;
             devices::a4988::A4988<MotorPortY> _MotorY;
             // devices::a4988::A4988<MotorPortZ> _MotorZ;
         };
@@ -52,7 +58,7 @@ namespace devices
                  typename MotorPortZ>
         void MotorController<MotorPortX, MotorPortY, MotorPortZ>::Initialize()
         {
-            // _MotorX.Initialize();
+            _MotorX.Initialize();
             _MotorY.Initialize();
             // _MotorZ.Initialize();
         }
@@ -60,15 +66,27 @@ namespace devices
         template<typename MotorPortX,
                  typename MotorPortY,
                  typename MotorPortZ>
-        void MotorController<MotorPortX, MotorPortY, MotorPortZ>::MoveToCoordinate(std::int32_t X,
-                                                                                   std::int32_t Y,
-                                                                                   std::int32_t Z)
+        void MotorController<MotorPortX, MotorPortY, MotorPortZ>::MoveToCoordinate(int32_t X,
+                                                                                   int32_t Y,
+                                                                                   int32_t Z)
         {
-            // _MotorX.MoveToCoordinate(X);
-            UNUSED(X);
+            _MotorX.MoveToCoordinate(X);
             _MotorY.MoveToCoordinate(Y);
-            // UNUSED(Y);
             // _MotorZ.MoveToCoordinate(Z);
+            // UNUSED(X);
+            UNUSED(Z);
+        }
+
+        template <typename MotorPortX,
+                  typename MotorPortY,
+                  typename MotorPortZ>
+        void MotorController<MotorPortX, MotorPortY, MotorPortZ>::Rotate(int32_t X,
+                                                                         int32_t Y,
+                                                                         int32_t Z)
+        {
+            _MotorX.Rotate(X);
+            // UNUSED(X);
+            _MotorY.Rotate(Y);
             UNUSED(Z);
         }
     } // namespace MotorController

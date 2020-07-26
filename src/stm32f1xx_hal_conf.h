@@ -1,5 +1,4 @@
-/**
-  ******************************************************************************
+/******************************************************************************
   * @file    stm32f1xx_hal_conf.h
   * @author  MCD Application Team
   * @brief   HAL configuration template file.
@@ -147,7 +146,7 @@ extern "C" {
 #define  USE_HAL_IRDA_REGISTER_CALLBACKS        0U /* IRDA register callback disabled      */
 #define  USE_HAL_SRAM_REGISTER_CALLBACKS        0U /* SRAM register callback disabled      */
 #define  USE_HAL_SPI_REGISTER_CALLBACKS         0U /* SPI register callback disabled       */
-#define  USE_HAL_TIM_REGISTER_CALLBACKS         0U /* TIM register callback disabled       */
+#define  USE_HAL_TIM_REGISTER_CALLBACKS         1U /* TIM register callback disabled       */
 #define  USE_HAL_UART_REGISTER_CALLBACKS        1U
 #define  USE_HAL_USART_REGISTER_CALLBACKS       0U /* USART register callback disabled     */
 #define  USE_HAL_WWDG_REGISTER_CALLBACKS        0U /* WWDG register callback disabled      */

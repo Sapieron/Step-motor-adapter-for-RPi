@@ -79,5 +79,15 @@ constexpr std::uint32_t operator"" _rpm(unsigned long long int value)
     return value;
 }
 
+/**
+ * @brief Marker to indicate value is in percents
+ * 
+ * @param value 
+ * @return constexpr std::uint32_t 
+ */
+constexpr std::uint32_t operator""_percent(uint64_t value)
+{
+    return value;
+}
 
 #endif /* BASE_UTILS_HPP */

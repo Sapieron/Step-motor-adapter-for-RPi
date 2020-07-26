@@ -44,7 +44,6 @@ add_subdirectory(${MCU_PLATFORM_PATH})
 add_subdirectory(src)
 add_subdirectory(libraries)
 add_subdirectory(doc)
-add_subdirectory(unit_tests)
 
 message("----------------------------------------------------------------------------------------------------------------")
 message("----------------------------------------------------------------------------------------------------------------")

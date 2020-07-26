@@ -54,12 +54,19 @@ namespace board
 
     template <typename Location> struct MotorPins
     {
+        struct Options
+        {
+            static constexpr auto Mode = GPIO_MODE_AF_PP;
+            static constexpr auto Pull = GPIO_PULLDOWN;
+            static constexpr auto Speed = GPIO_SPEED_FREQ_HIGH;
+        };
+
         const drivers::gpio::OutputPin<typename Location::Dir>      Dir;
         const drivers::gpio::OutputPin<typename Location::Ms1>      Ms1;
         const drivers::gpio::OutputPin<typename Location::Ms2>      Ms2;
         const drivers::gpio::OutputPin<typename Location::Ms3>      Ms3;
-        const drivers::gpio::CustomPin<typename Location::Step>     Step;
-                                    //    typename Config::Step>       Step;
+        const drivers::gpio::CustomPin<typename Location::Step,
+                                                Options>            Step;
 
         void Initialize() const
         {

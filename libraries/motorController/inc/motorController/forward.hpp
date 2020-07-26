@@ -27,7 +27,7 @@
 //         template<typename MotorPortX,
 //                  typename MotorPortY,
 //                  typename MotorPortZ>
-//         class MotorController
+//         class MotorController;
 //     } // namespace motorController
     
 // } // namespace devices
