@@ -21,7 +21,7 @@
  *                             Includes
 \******************************************************************************/
 /** @brief Deliver register & peripheral definitions */
-#include "stm32f103xb.h"
+#include "TargetsDefines.hpp"
 
 /******************************************************************************\
  *                               Code

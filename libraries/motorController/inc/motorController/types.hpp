@@ -1,9 +1,10 @@
 /**
- * @file command_factory.hpp
+ * @file types.hpp
  * @author Pawel Klisz (pawelochojec@gmail.com)
- * @brief 
+ * @brief This file contains types specific for motor controller.
+ *        It is bound to @ref AdapterAPI (https://github.com/Sapieron/AdapterAPI)
  * @version 0.1
- * @date 2020-05-09
+ * @date 2020-07-26
  * 
  * @copyright Copyright (c) 2020 by Pawel Klisz. All rights reserved
  * 
@@ -14,27 +15,32 @@
  * 
  */
 
-
-#ifndef MOTORCONTROLLER_COMMAND_FACTORY_HPP
-#define MOTORCONTROLLER_COMMAND_FACTORY_HPP
+#ifndef MOTORCONTROLLER_TYPES_HPP
+#define MOTORCONTROLLER_TYPES_HPP
 
 #pragma once
 
 /******************************************************************************\
  *                                Includes
 \******************************************************************************/
+
+
+/******************************************************************************\
+ *                                 Code
+\******************************************************************************/
+
 namespace devices
 {
     namespace motorController
     {
-        class CommandFactory
-        {
-            //
-        };
+        
     } // namespace motorController
     
 } // namespace devices
 
 
 
-#endif /* MOTORCONTROLLER_COMMAND_FACTORY_HPP */
+/******************************************************************************\
+ *                              End of file
+\******************************************************************************/
+#endif /* MOTORCONTROLLER_TYPES_HPP */

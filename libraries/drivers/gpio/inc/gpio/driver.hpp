@@ -118,7 +118,7 @@ namespace drivers
             void Initialize()   const;
             void DeInitialize() const;
         };
-//FIXME move definitions to .cpp file
+
         template <typename Location, bool DefaultState>
         OutputPin<Location, DefaultState>::OutputPin() : Pin(Port, PinNumber)
         {

@@ -1,7 +1,7 @@
 set(SOURCES
 )
 
-add_definitions(-DSTM32F103xB)
+add_definitions(-DSTM32F103xB -DDEVBOARD)
 
 add_library(platform INTERFACE ${SOURCES})
 

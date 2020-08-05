@@ -35,9 +35,20 @@ namespace devices
 
             // void SetCommandList(commands);
 
-            virtual void Puts(const char* text) override; //FIXME has to be inline, as definition can't be contained in .cpp file - bug to fix
+            /**
+             * @brief Puts desired text to output
+             * 
+             * @param text - const char* text to be outputted
+             */
+            virtual void Puts(const char* text) override;
 
-            // void Read();
+            /**
+             * @brief Returns data contained in rx buffer
+             * 
+             * @return const char* Data
+             */
+            virtual const char* GetRxBuffer() override;
+
         private:
             ILineIO& _stdio;
         };

@@ -63,6 +63,9 @@ namespace drivers
             /** @brief Outputs given string to connected UART peripheral */
             virtual void Puts(const char* text) override;
 
+            /** @brief Returns data stored in rx buffer */
+            virtual const char *GetRxBuffer() override;
+
             /** @brief DMA reception handler */
             void OnDmaReceive();
 
@@ -174,6 +177,12 @@ namespace drivers
         void UART<UartPort>::Puts(const char* text)
         {
             HAL_UART_Transmit_DMA(&_huart, (uint8_t *)text, strlen(text));
+        }
+
+        template<typename UartPort>
+        const char* UART<UartPort>::GetRxBuffer()
+        {
+            return reinterpret_cast<const char*>(&this->_rxBuffer);
         }
 
         template <typename UartPort>

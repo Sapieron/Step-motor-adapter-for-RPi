@@ -1,5 +1,5 @@
 #include "gpio/driver.hpp"
-#include "stm32f1xx_hal_rcc.h"
+#include "TargetsDefines.hpp"
 
 using drivers::gpio::Pin;
 

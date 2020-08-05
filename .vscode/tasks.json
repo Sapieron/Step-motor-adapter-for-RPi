@@ -1,0 +1,38 @@
+
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Configure CMake to EngModel",
+            "type": "shell",
+            "group": "build",
+            "command": " cmake -G Ninja -DTARGET_MCU_PLATFORM=EngModel\"D:\\WINDOWS_DATA\\Folder Files\\CMake\\bin\\cmake.EXE\" --no-warn-unused-cli '-DCMAKE_MAKE_PROGRAM:STRING=C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe' -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_TOOLCHAIN_FILE:FILEPATH=c:\\Users\\Pawel\\Desktop\\Studia\\inzynierka\\CodeWorkspace\\Step-motor-adapter-for-RPi/cmake/toolchain.cmake -Hc:/Users/Pawel/Desktop/Studia/inzynierka/CodeWorkspace/Step-motor-adapter-for-RPi -Bc:/Users/Pawel/Desktop/Studia/inzynierka/CodeWorkspace/Step-motor-adapter-for-RPi/build -G Ninja -DTARGET_MCU_PLATFORM=EngModel",
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": ["absolute"]
+            }
+        },
+        {
+            "label": "Configure CMake to DevBoard",
+            "type": "shell",
+            "group": "build",
+            "command": " cmake -G Ninja -DTARGET_MCU_PLATFORM=DevBoard\"D:\\WINDOWS_DATA\\Folder Files\\CMake\\bin\\cmake.EXE\" --no-warn-unused-cli '-DCMAKE_MAKE_PROGRAM:STRING=C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe' -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_TOOLCHAIN_FILE:FILEPATH=c:\\Users\\Pawel\\Desktop\\Studia\\inzynierka\\CodeWorkspace\\Step-motor-adapter-for-RPi/cmake/toolchain.cmake -Hc:/Users/Pawel/Desktop/Studia/inzynierka/CodeWorkspace/Step-motor-adapter-for-RPi -Bc:/Users/Pawel/Desktop/Studia/inzynierka/CodeWorkspace/Step-motor-adapter-for-RPi/build -G Ninja -DTARGET_MCU_PLATFORM=DevBoard",
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": ["absolute"]
+            }
+        },
+        {
+            "label": "Build Target",
+            "type": "shell",
+            "group": "build",
+            "command": "cmake --build ./build --config Debug --target all --parallel -- -j 6",
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": ["absolute"]
+            }
+        }
+    ]
+}

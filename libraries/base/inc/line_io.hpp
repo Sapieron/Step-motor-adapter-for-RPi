@@ -26,7 +26,7 @@ public:
     
     virtual void Puts(const char* text) = 0;
 
-    // virtual void Read(span) = 0; //TODO add span library
+    virtual const char *GetRxBuffer() = 0;
 };
 
 

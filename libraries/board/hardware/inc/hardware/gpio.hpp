@@ -87,11 +87,11 @@ namespace board
               typename TUART3,
               typename TMotor_X,
               typename TMotor_Y,
-              typename TMotor_Z >
+              typename TMotor_Z>
     struct BoardGPIOBase
     {
         /** @brief LedCommOk onboard green led */
-        const drivers::gpio::OutputPin<TCommOkIndicator, DISABLE> LedCommOk;
+        const drivers::gpio::OutputPin<TCommOkIndicator, FunctionalState::DISABLE> LedCommOk;
 
         /** @brief UART2 */
         const UARTPins<TUART3> UART_3;
@@ -105,27 +105,27 @@ namespace board
         /** @brief Motor 3*/
         const MotorPins<TMotor_Z> Motor_Z;
 
-        /** @brief Gripper */
-        //const drivers::gpio::OutputPin<TGripper, DISABLE> Gripper;   //TODO not yet implemented
-
         /** @brief Initializes GPIO pins */
         void Initialize() const
         {
             this->LedCommOk.Initialize();
             this->UART_3.Initialize();
-            this->Motor_X.Initialize();
             this->Motor_Y.Initialize();
+
+        #ifndef DEVBOARD
+            this->Motor_X.Initialize();
             this->Motor_Z.Initialize();
+        #endif
         }
     };
 
     /** @brief Connects GPIO pins to IO map */
     using BOARDGPIO = gpio::VerifyPinsUniqueness<BoardGPIOBase,
-        io_map::LedCommOk,
-        io_map::UART_3,
-        io_map::Motor_X,
-        io_map::Motor_Y,
-        io_map::Motor_Z>;
+                                                 io_map::LedCommOk,
+                                                 io_map::UART_3,
+                                                 io_map::Motor_X,
+                                                 io_map::Motor_Y,
+                                                 io_map::Motor_Z>;
 
     /** @} */
 }

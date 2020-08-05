@@ -41,7 +41,7 @@ namespace devices
                         int32_t Z);
         private:
             devices::a4988::A4988<MotorPortX> _MotorX;
-            devices::a4988::A4988<MotorPortY> _MotorY;
+            // devices::a4988::A4988<MotorPortY> _MotorY;
             // devices::a4988::A4988<MotorPortZ> _MotorZ;
         };
 
@@ -59,7 +59,7 @@ namespace devices
         void MotorController<MotorPortX, MotorPortY, MotorPortZ>::Initialize()
         {
             _MotorX.Initialize();
-            _MotorY.Initialize();
+            // _MotorY.Initialize();
             // _MotorZ.Initialize();
         }
 
@@ -71,9 +71,9 @@ namespace devices
                                                                                    int32_t Z)
         {
             _MotorX.MoveToCoordinate(X);
-            _MotorY.MoveToCoordinate(Y);
+            // _MotorY.MoveToCoordinate(Y);
             // _MotorZ.MoveToCoordinate(Z);
-            // UNUSED(X);
+            UNUSED(Y);
             UNUSED(Z);
         }
 
@@ -86,7 +86,8 @@ namespace devices
         {
             _MotorX.Rotate(X);
             // UNUSED(X);
-            _MotorY.Rotate(Y);
+            // _MotorY.Rotate(Y);
+            UNUSED(Y);
             UNUSED(Z);
         }
     } // namespace MotorController

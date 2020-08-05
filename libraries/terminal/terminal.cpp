@@ -18,12 +18,13 @@ Terminal::Terminal(ILineIO& stdio) : _stdio(stdio)
 {
 }
 
-/**
- * @brief Puts desired text to output
- * 
- * @param text 
- */
+
 void Terminal::Puts(const char *text)
 {
     this->_stdio.Puts(text);
+}
+
+const char* Terminal::GetRxBuffer()
+{
+    return this->_stdio.GetRxBuffer();
 }

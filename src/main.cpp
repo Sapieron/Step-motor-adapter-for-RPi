@@ -34,7 +34,7 @@
 #include "board_access.hpp"
 
 /******************************************************************************\
- * 								Global defines
+ *                               Global defines
 \******************************************************************************/
 /** @brief Instance of Board. Delivers access to peripherals */
 BOARD Main;
@@ -42,7 +42,7 @@ BOARD Main;
 
 
 /******************************************************************************\
- * 								Main application
+ *                              Main application
 \******************************************************************************/
 int main(void)
 {
@@ -79,18 +79,6 @@ extern "C" void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
     Main.Hardware.Pins.LedCommOk.Low();
 }
 
-/** @brief send frame every 1000 ticks */
-int tick = 2000;
-extern "C" void HAL_SYSTICK_Callback(void)
-{
-    while(! tick--)
-    {
-        GetTerminal().Puts("Test\r\n");
-        Main.Hardware.SyncMovementController.Rotate(40, 40, 20);    //FIXME use GetSyncMovementContoller() interface, hardware.syncmove SHOULDNT EXIST
-        tick = 2000;
-    }
-}
-
 
 /******************************************************************************\
  *                               IRQ Handlers
@@ -113,8 +101,8 @@ extern "C" __attribute__((optimize("O3"))) void DMA1_Channel2_IRQHandler(void)
     Main.Hardware.Terminal.OnDmaTransmit();
 }
 
+
 extern "C" __attribute__((optimize("O1"))) void TIM2_IRQHandler(void)
- *                           Main application
 {
     // Main.Hardware.MotorX.OnInterrupt(); //TODO make this handling work
     if ((TIM2->SR &= TIM_SR_UIF) == 0b1)
