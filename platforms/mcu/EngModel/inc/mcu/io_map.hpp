@@ -40,7 +40,7 @@ namespace io_map
 
         static constexpr std::uint32_t OutputSlaveTimer = TIM8_BASE;
         static constexpr std::uint32_t MasterTimer      = TIM4_BASE;
-        static constexpr IRQn_Type     MasterTimerIRQn  = IRQn_Type::TIM8_TRG_COM_TIM14_IRQn;   //FIXME is it correct irqn?
+        static constexpr IRQn_Type     MasterTimerIRQn  = IRQn_Type::TIM4_IRQn;   //FIXME is it correct irqn?
         static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_1;
 
         static constexpr std::uint32_t DutyCycleInPercent = 10_percent;
@@ -59,8 +59,8 @@ namespace io_map
         using Step  = PinLocation<GPIOA_BASE, GPIO_PIN_8>;
 
         static constexpr std::uint32_t OutputSlaveTimer = TIM1_BASE;
-        static constexpr std::uint32_t MasterTimer      = TIM2_BASE;
-        static constexpr IRQn_Type     MasterTimerIRQn  = IRQn_Type::TIM1_TRG_COM_TIM11_IRQn;   //FIXME is it correct irqn?
+        static constexpr std::uint32_t MasterTimer      = TIM2_BASE; //TODO use definitions from A4988/types.hpp
+        static constexpr IRQn_Type     MasterTimerIRQn  = IRQn_Type::TIM2_IRQn;   //FIXME is it correct irqn?
         static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_1;
 
         static constexpr std::uint32_t DutyCycleInPercent = 10_percent;
@@ -80,7 +80,7 @@ namespace io_map
 
         static constexpr std::uint32_t OutputSlaveTimer = TIM12_BASE;
         static constexpr std::uint32_t MasterTimer      = TIM5_BASE;
-        static constexpr IRQn_Type     MasterTimerIRQn  = IRQn_Type::TIM12_IRQn;
+        static constexpr IRQn_Type     MasterTimerIRQn  = IRQn_Type::TIM5_IRQn;
         static constexpr std::uint32_t TimerChannel     = TIM_CHANNEL_1;
 
         static constexpr std::uint32_t DutyCycleInPercent = 10_percent;

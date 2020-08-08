@@ -40,7 +40,6 @@
 BOARD Main;
 
 
-
 /******************************************************************************\
  *                              Main application
 \******************************************************************************/
@@ -51,8 +50,6 @@ int main(void)
     HAL_Init();
     Main.Hardware.Initialize();
 
-    /** @brief Generate interrupt with 1kHz rate */
-    SysTick_Config(SystemCoreClock / 1_kHz);    //TODO move it to clock module?
     __enable_irq();
 
     /** @note Events are handled with interrupts */
@@ -61,6 +58,7 @@ int main(void)
         /** @remark nothing to do here */
     }
 }
+
 
 /******************************************************************************\
  *                                 Callbacks
@@ -71,7 +69,10 @@ extern "C" void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     UNUSED(huart);
     Main.Hardware.Pins.LedCommOk.High();
     Main.Hardware.Terminal.CallbackHandler();
+    Main.motorController.Rotate(2,2,2);
+    // Main.motorController.MoveToCoordinate(20,20,20);
 }
+
 
 extern "C" void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -127,7 +128,23 @@ extern "C" __attribute__((optimize("O1"))) void TIM4_IRQHandler(void)
 
     /** @brief commutation update control */
     /* Reset the OC1M bits in the CCMR1 register */
-    TIM3->CCMR1 &= TIM_CCMR1_OC2M;
+    TIM8->CCMR1 &= TIM_CCMR1_OC2M;
     /* configure the OC1M bits in the CCMRx register to inactive mode*/
-    TIM3->CCMR1 |= TIM_OCMODE_FORCED_INACTIVE;
+    TIM8->CCMR1 |= TIM_OCMODE_FORCED_INACTIVE;
+}
+
+
+extern "C" __attribute__((optimize("01"))) void TIM5_IRQHandler(void)
+{
+        // Main.Hardware.MotorX.OnInterrupt(); //TODO make this handling work
+    if ((TIM5->SR &= TIM_SR_UIF) == 0b1)
+    {
+        TIM5->SR &= ~(TIM_SR_UIF);
+    }
+
+    /** @brief commutation update control */
+    /* Reset the OC1M bits in the CCMR1 register */
+    TIM12->CCMR1 &= TIM_CCMR1_OC2M;
+    /* configure the OC1M bits in the CCMRx register to inactive mode*/
+    TIM12->CCMR1 |= TIM_OCMODE_FORCED_INACTIVE;
 }

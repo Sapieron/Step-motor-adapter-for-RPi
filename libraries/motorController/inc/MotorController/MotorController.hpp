@@ -35,14 +35,21 @@ namespace devices
             void MoveToCoordinate(int32_t X,
                                   int32_t Y,
                                   int32_t Z);
-
+            //TODO make it accept various num of steppers
+            /**
+             * @brief Executes rotation on 3 connected stepper motors
+             * 
+             * @param X - rotations on X axis
+             * @param Y - rotations on Y axis
+             * @param Z - rotations on Z axis
+             */
             void Rotate(int32_t X,
                         int32_t Y,
                         int32_t Z);
         private:
             devices::a4988::A4988<MotorPortX> _MotorX;
-            // devices::a4988::A4988<MotorPortY> _MotorY;
-            // devices::a4988::A4988<MotorPortZ> _MotorZ;
+            devices::a4988::A4988<MotorPortY> _MotorY;
+            devices::a4988::A4988<MotorPortZ> _MotorZ;
         };
 
         template<typename MotorPortX,
@@ -50,7 +57,7 @@ namespace devices
                  typename MotorPortZ>
         MotorController<MotorPortX, MotorPortY, MotorPortZ>::MotorController()
         {
-            //TODO
+            //TODO Maybe it should take a reference to objects instead? It's a target interface!
         }
 
         template<typename MotorPortX,
@@ -59,8 +66,8 @@ namespace devices
         void MotorController<MotorPortX, MotorPortY, MotorPortZ>::Initialize()
         {
             _MotorX.Initialize();
-            // _MotorY.Initialize();
-            // _MotorZ.Initialize();
+            _MotorY.Initialize();
+            // _MotorZ.Initialize();    //FIXME please fix Z motor movement
         }
 
         template<typename MotorPortX,
@@ -71,10 +78,8 @@ namespace devices
                                                                                    int32_t Z)
         {
             _MotorX.MoveToCoordinate(X);
-            // _MotorY.MoveToCoordinate(Y);
-            // _MotorZ.MoveToCoordinate(Z);
-            UNUSED(Y);
-            UNUSED(Z);
+            _MotorY.MoveToCoordinate(Y);
+            _MotorZ.MoveToCoordinate(Z);
         }
 
         template <typename MotorPortX,
@@ -85,10 +90,8 @@ namespace devices
                                                                          int32_t Z)
         {
             _MotorX.Rotate(X);
-            // UNUSED(X);
-            // _MotorY.Rotate(Y);
-            UNUSED(Y);
-            UNUSED(Z);
+            _MotorY.Rotate(Y);
+            _MotorZ.Rotate(Z);
         }
     } // namespace MotorController
     

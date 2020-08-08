@@ -29,9 +29,7 @@
 #include "hardware/gpio.hpp"
 #include "utils.hpp"
 
-#include "timer/timer.hpp"
-
-#include "timer/configuration.hpp"
+#include "A4988/types.hpp"
 
 /******************************************************************************\
  *                             Code
@@ -103,10 +101,10 @@ namespace devices
              * @brief Helper function that initializes desired timer
              * 
              */
-            void ClockTimerEnable() const;
+            void ClockTimerEnable(const std::uint_fast32_t selectedTimer) const;
 
             int32_t _position;
-            int32_t _dirState;
+            bool _dirState;
             int32_t _steps_remaining;
             int32_t _steps_to_cruise;
             int32_t _step_pulse;
@@ -126,7 +124,8 @@ namespace devices
         template<typename MotorPort>
         void A4988<MotorPort>::Initialize()
         {
-            ClockTimerEnable();
+            ClockTimerEnable(MotorPort::OutputSlaveTimer);  //FIXME move it to Timer driver
+            ClockTimerEnable(MotorPort::MasterTimer);
             InitializeTimers();
             SetMicrosteppingMode();
             SetCurrentPositionAsZero();
@@ -145,11 +144,21 @@ namespace devices
         {
             _dirState = (rotations >= 0) ? true : false;
             _PinsControl.Dir.Set(_dirState);
-            _steps_to_cruise = abs(rotations * _factor);
+            _steps_to_cruise = abs(rotations * MotorPort::MotorStepsPerRev);
 
-            if(_steps_to_cruise != 0)
+            while(_steps_to_cruise > 0)
             {
-                ExecuteRotation(_steps_to_cruise);
+                //FIXME !It needs FreeRTOS to be introduced!
+                if(_steps_to_cruise > 100)    //TODO instead of std::uint16_t define it in types
+                {
+                    ExecuteRotation(100);
+                    _steps_to_cruise -= 100;
+                }
+                else
+                {
+                    ExecuteRotation(_steps_to_cruise);
+                    _steps_to_cruise = 0;
+                }
             }
         }
 
@@ -172,10 +181,7 @@ namespace devices
         template <typename MotorPort>
         void A4988<MotorPort>::InitializeTimers()
         {
-            __HAL_RCC_TIM1_CLK_ENABLE();
-            __HAL_RCC_TIM2_CLK_ENABLE();
-            __HAL_RCC_TIM3_CLK_ENABLE();
-            __HAL_RCC_TIM4_CLK_ENABLE();
+
 
             HAL_NVIC_SetPriority(MotorPort::MasterTimerIRQn, 0, 0);
             HAL_NVIC_EnableIRQ(MotorPort::MasterTimerIRQn);
@@ -196,24 +202,24 @@ namespace devices
 
             _slaveTimer->CCR1 = period * dutyCycleInPercent / 100; //configure pulse width
 
-            /** @brief Select clock division to 1 */
+            /* Select clock division to 1 */
             _slaveTimer->CR1 &= ~(TIM_CR1_CKD);
             _slaveTimer->CR1 |= TIM_CLOCKDIVISION_DIV1;
 
-            /** @brief Select the upcounting for _slaveTimer */
+            /* Select the upcounting for _slaveTimer */
             /* Reset mode selection bit fields */
             _slaveTimer->CR1 &= ~(TIM_CR1_DIR | TIM_CR1_CMS);
             /* select Up-counting mode */
             _slaveTimer->CR1 |= TIM_COUNTERMODE_UP;
 
-            /** @brief SET PWM1 mode */
+            /* SET PWM1 mode */
             /* Reset the Output Compare Mode Bits */
             _slaveTimer->CCMR1 &= ~TIM_CCMR1_OC1M;
             _slaveTimer->CCMR1 &= ~TIM_CCMR1_CC1S;
             /* Select the output compare mode 1*/
             _slaveTimer->CCMR1 |= TIM_OCMODE_PWM1;
 
-            /** @brief Select active High as output polarity level */
+            /** Select active High as output polarity level */
             /* Reset the Output Polarity level */
             _slaveTimer->CCER &= ~TIM_CCER_CC1P;
             /* Set the high Output Compare Polarity */
@@ -221,7 +227,7 @@ namespace devices
             /* Enable CC1 output on High level*/
             _slaveTimer->CCER |= TIM_CCER_CC1E; //TODO not sure if ODIdleState is correct
 
-            /** @brief Select active High as output Complementary polarity level */
+            /* Select active High as output Complementary polarity level */
             /* Reset the Output N State */
             _slaveTimer->CCER &= ~TIM_CCER_CC1NP;
             /* Set the Output N Polarity to high level */
@@ -245,16 +251,7 @@ namespace devices
             /************ Slave mode configuration: Trigger mode ************/
             /* Select the TIM_TS_ITR1 signal as Input trigger for the TIM */
             _slaveTimer->SMCR &= ~TIM_SMCR_TS;
-
-            if (MotorPort::OutputSlaveTimer == TIM1_BASE) //FIXME move it to separate config module
-            {
-                _slaveTimer->SMCR |= TIM_TS_ITR1;
-            }
-
-            if (MotorPort::OutputSlaveTimer == TIM3_BASE) //FIXME move it to separate config module
-            {
-                _slaveTimer->SMCR |= TIM_TS_ITR3;
-            }
+            _slaveTimer->SMCR |= Config<MotorPort::OutputSlaveTimer>::slaveTimerITR;
 
             /* Select the Slave Mode */
             _slaveTimer->SMCR &= ~TIM_SMCR_SMS;
@@ -290,23 +287,14 @@ namespace devices
             /********** Slave mode configuration: Trigger mode ************/
             /* Select the TIM_TS_ITR0 signal as Input trigger for the TIM */
             _masterTimer->SMCR &= ~TIM_SMCR_TS;
-
-            if(MotorPort::MasterTimer == TIM2_BASE)  //TODO it should be handled by another module
-            {
-                _masterTimer->SMCR |= TIM_TS_ITR0;
-            }
-
-            if (MotorPort::MasterTimer == TIM4_BASE) //TODO it should be handled by another module
-            {
-                _masterTimer->SMCR |= TIM_TS_ITR2;
-            }
+            _masterTimer->SMCR |= Config<MotorPort::OutputSlaveTimer>::masterTimerITR;
 
             /* Slave Mode selection: Trigger reset Mode */
             _masterTimer->SMCR &= ~TIM_SMCR_SMS;
             _masterTimer->SMCR |= TIM_SLAVEMODE_RESET;
 
             /****************************************************************/
-            /** @brief update interrupt enable */
+            /* update interrupt enable */
             _masterTimer->DIER |= TIM_DIER_UIE;
 
             _slaveTimer->CCMR1 &= TIM_CCMR1_OC2M;
@@ -337,9 +325,94 @@ namespace devices
         }
 
         template <typename MotorPort>
-        void A4988<MotorPort>::ClockTimerEnable() const
+        void A4988<MotorPort>::ClockTimerEnable(const std::uint_fast32_t selectedTimer) const
         {
-            //TODO call timer driver
+            switch(selectedTimer)
+            {
+                #ifdef TIM1_BASE
+                case TIM1_BASE:
+                    __HAL_RCC_TIM1_CLK_ENABLE();
+                    break;
+                #endif /* TIM1_BASE */
+
+                #ifdef TIM2_BASE
+                case TIM2_BASE:
+                    __HAL_RCC_TIM2_CLK_ENABLE();
+                    break;
+                #endif /* TIM2_BASE */
+
+                #ifdef TIM3_BASE
+                case TIM3_BASE:
+                    __HAL_RCC_TIM3_CLK_ENABLE();
+                    break;
+                #endif /* TIM3_BASE */
+
+                #ifdef TIM4_BASE
+                case TIM4_BASE:
+                    __HAL_RCC_TIM4_CLK_ENABLE();
+                    break;
+                #endif /* TIM4_BASE */
+
+                #ifdef TIM5_BASE
+                case TIM5_BASE:
+                    __HAL_RCC_TIM5_CLK_ENABLE();
+                    break;
+                #endif /* TIM5_BASE */
+
+                #ifdef TIM6_BASE
+                case TIM6_BASE:
+                    __HAL_RCC_TIM6_CLK_ENABLE();
+                    break;
+                #endif /* TIM6_BASE */
+
+                #ifdef TIM7_BASE
+                case TIM7_BASE:
+                    __HAL_RCC_TIM7_CLK_ENABLE();
+                    break;
+                #endif /* TIM7_BASE */
+
+                #ifdef TIM8_BASE
+                case TIM8_BASE:
+                    __HAL_RCC_TIM8_CLK_ENABLE();
+                    break;
+                #endif /* TIM8_BASE */
+
+                #ifdef TIM9_BASE
+                case TIM9_BASE:
+                    __HAL_RCC_TIM9_CLK_ENABLE();
+                    break;
+                #endif /* TIM9_BASE */
+
+                #ifdef TIM10_BASE
+                case TIM10_BASE:
+                    __HAL_RCC_TIM10_CLK_ENABLE();
+                    break;
+                #endif /* TIM10_BASE */
+
+                #ifdef TIM11_BASE
+                case TIM11_BASE:
+                    __HAL_RCC_TIM11_CLK_ENABLE();
+                    break;
+                #endif /* TIM11_BASE */
+
+                #ifdef TIM12_BASE
+                case TIM12_BASE:
+                    __HAL_RCC_TIM12_CLK_ENABLE();
+                    break;
+                #endif /* TIM12_BASE */
+
+                #ifdef TIM13_BASE
+                case TIM13_BASE:
+                    __HAL_RCC_TIM13_CLK_ENABLE();
+                    break;
+                #endif /* TIM13_BASE */
+
+                #ifdef TIM14_BASE
+                case TIM14_BASE:
+                    __HAL_RCC_TIM14_CLK_ENABLE();
+                    break;
+                #endif /* TIM14_BASE */
+            }
         }
     } // namespace A4988
 } // namespace drivers
