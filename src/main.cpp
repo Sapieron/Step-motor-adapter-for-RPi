@@ -17,16 +17,16 @@
 /******************************************************************************\
  *                                 Includes
 \******************************************************************************/
-/** Standard library includes */
+/* Standard library includes */
 #include <cstdint>
 #include <cstring>
 
-/** Hardware Abstraction Layer includes */
+/* Hardware Abstraction Layer includes */
 #include "stm32f1xx.h"
 #include "stm32f1xx_hal.h"
 #include "system_stm32f1xx.h"
 
-/** General includes */
+/* General includes */
 #include "gpio/forward.hpp"
 #include "mcu/board.hpp"
 #include "mcu/stm32f1xx_it.h"
@@ -45,17 +45,11 @@ BOARD Main;
 \******************************************************************************/
 int main(void)
 {
-    __disable_irq();
-
     HAL_Init();
     Main.Hardware.Initialize();
 
-    __enable_irq();
-
-    /** @note Events are handled with interrupts */
     while (1)
     {
-        /** @remark nothing to do here */
     }
 }
 
@@ -68,9 +62,8 @@ extern "C" void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     UNUSED(huart);
     Main.Hardware.Pins.LedCommOk.High();
+    Main.motorController.OnReception(GetTerminal().GetRxBuffer());
     Main.Hardware.Terminal.CallbackHandler();
-    Main.motorController.Rotate(2,2,2);
-    // Main.motorController.MoveToCoordinate(20,20,20);
 }
 
 
@@ -103,48 +96,20 @@ extern "C" __attribute__((optimize("O3"))) void DMA1_Channel2_IRQHandler(void)
 }
 
 
-extern "C" __attribute__((optimize("O1"))) void TIM2_IRQHandler(void)
-{
-    // Main.Hardware.MotorX.OnInterrupt(); //TODO make this handling work
-    if ((TIM2->SR &= TIM_SR_UIF) == 0b1)
-    {
-        TIM2->SR &= ~(TIM_SR_UIF);
-    }
 
-    /** @brief commutation update control */
-    /* Reset the OC1M bits in the CCMR1 register */
-    TIM1->CCMR1 &= TIM_CCMR1_OC2M;
-    /* configure the OC1M bits in the CCMRx register to inactive mode*/
-    TIM1->CCMR1 |= TIM_OCMODE_FORCED_INACTIVE;
+extern "C" __attribute__((optimize("O3"))) void TIM4_IRQHandler(void)
+{
+    Main.Hardware.MotorX.OnInterrupt();
 }
 
-extern "C" __attribute__((optimize("O1"))) void TIM4_IRQHandler(void)
+extern "C" __attribute__((optimize("O3"))) void TIM2_IRQHandler(void)
 {
-    // Main.Hardware.MotorX.OnInterrupt(); //TODO make this handling work
-    if ((TIM4->SR &= TIM_SR_UIF) == 0b1)
-    {
-        TIM4->SR &= ~(TIM_SR_UIF);
-    }
-
-    /** @brief commutation update control */
-    /* Reset the OC1M bits in the CCMR1 register */
-    TIM8->CCMR1 &= TIM_CCMR1_OC2M;
-    /* configure the OC1M bits in the CCMRx register to inactive mode*/
-    TIM8->CCMR1 |= TIM_OCMODE_FORCED_INACTIVE;
+    Main.Hardware.MotorY.OnInterrupt();
 }
 
 
-extern "C" __attribute__((optimize("01"))) void TIM5_IRQHandler(void)
-{
-        // Main.Hardware.MotorX.OnInterrupt(); //TODO make this handling work
-    if ((TIM5->SR &= TIM_SR_UIF) == 0b1)
-    {
-        TIM5->SR &= ~(TIM_SR_UIF);
-    }
 
-    /** @brief commutation update control */
-    /* Reset the OC1M bits in the CCMR1 register */
-    TIM12->CCMR1 &= TIM_CCMR1_OC2M;
-    /* configure the OC1M bits in the CCMRx register to inactive mode*/
-    TIM12->CCMR1 |= TIM_OCMODE_FORCED_INACTIVE;
-}
+// extern "C" __attribute__((optimize("03"))) void TIM5_IRQHandler(void)
+// {
+//         // Main.Hardware.MotorZ.OnInterrupt(); //TODO make this handling work
+// }

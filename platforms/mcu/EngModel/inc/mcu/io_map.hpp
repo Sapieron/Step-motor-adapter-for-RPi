@@ -32,6 +32,8 @@ namespace io_map
 
     struct Motor_X : public MotorPins<Motor_X>
     {
+        static constexpr const char* Name = "MotorX";
+
         using Dir   = PinLocation<GPIOB_BASE, GPIO_PIN_13>;
         using Ms1   = PinLocation<GPIOC_BASE, GPIO_PIN_0>;
         using Ms2   = PinLocation<GPIOC_BASE, GPIO_PIN_1>;
@@ -48,10 +50,13 @@ namespace io_map
         static constexpr std::uint32_t Frequency        = 200_Hz;
         static constexpr std::uint32_t MotorStepsPerRev = 800;
         static constexpr std::uint32_t SteppingMode     = 2;
+        static constexpr float         OneRevEqualsMM   = 4;    
     };
 
     struct Motor_Y : public MotorPins<Motor_Y>
     {
+        static constexpr const char* Name = "MotorY";
+
         using Dir   = PinLocation<GPIOB_BASE, GPIO_PIN_0>;
         using Ms1   = PinLocation<GPIOC_BASE, GPIO_PIN_3>;
         using Ms2   = PinLocation<GPIOC_BASE, GPIO_PIN_4>;
@@ -68,10 +73,13 @@ namespace io_map
         static constexpr std::uint32_t Frequency        = 200_Hz;
         static constexpr std::uint32_t MotorStepsPerRev = 800;
         static constexpr std::uint32_t SteppingMode     = 2;    //FIXME it's a magic number! maybe create enum instead of MSTable?
+        static constexpr float         OneRevEqualsMM   = 4;    
     };
 
     struct Motor_Z : public MotorPins<Motor_Z>
     {
+        static constexpr const char* Name = "MotorZ";
+
         using Dir   = PinLocation<GPIOB_BASE, GPIO_PIN_15>;
         using Ms1   = PinLocation<GPIOC_BASE, GPIO_PIN_10>;
         using Ms2   = PinLocation<GPIOC_BASE, GPIO_PIN_11>;
@@ -88,6 +96,7 @@ namespace io_map
         static constexpr std::uint32_t Frequency        = 100_Hz;
         static constexpr std::uint32_t MotorStepsPerRev = 800;
         static constexpr std::uint32_t SteppingMode     = 2;
+        static constexpr float         OneRevEqualsMM   = 4;    
     };
 
     struct UART_3 : public UARTPins<UART_3>

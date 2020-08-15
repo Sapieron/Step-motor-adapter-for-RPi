@@ -20,21 +20,55 @@
 
 #pragma once
 
+
+
 /******************************************************************************\
  *                                Includes
+\******************************************************************************/
+#include <array>
+
+#include "types.hpp"
+
+/******************************************************************************\
+ *                                 Code
 \******************************************************************************/
 namespace devices
 {
     namespace motorController
     {
+        /**
+         * @addtogroup motor_controller
+         * @{
+         */
+
+        /**
+         * @brief CommandFactory responsible for creating frames
+         * for motorController
+         * 
+         */
         class CommandFactory
         {
-            //
+        public:
+            /**
+             * @brief Frame type describing type of command frame
+             * 
+             */
+            using Frame = std::array<uint8_t, CommandFrameSize>;
+
+            /**
+             * @brief Builds SayHelloWorld command frame on given buffer
+             * @param buffer 
+             */
+            void BuildSayHelloWorld(Frame buffer);
         };
+
+        /** @} */
     } // namespace motorController
     
 } // namespace devices
 
 
-
+/******************************************************************************\
+ *                            End of file
+\******************************************************************************/
 #endif /* MOTORCONTROLLER_COMMAND_FACTORY_HPP */

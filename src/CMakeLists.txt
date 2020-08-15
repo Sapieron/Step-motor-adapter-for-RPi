@@ -5,6 +5,7 @@ set(SOURCES
     main.cpp
     mcu/board.cpp
     board_access.cpp
+    stm32f1xx_hal_timebase_tim.c
 )
 
 add_executable(${NAME} ${SOURCES})

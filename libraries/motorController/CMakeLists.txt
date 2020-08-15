@@ -1,8 +1,8 @@
 set(NAME motorController)
 
 set(SOURCES
-    motorController.cpp
-    inc/${NAME}/motorController.hpp
+    command_factory.cpp
+    motor_controller.cpp
 )
 
 add_library(${NAME} STATIC ${SOURCES})

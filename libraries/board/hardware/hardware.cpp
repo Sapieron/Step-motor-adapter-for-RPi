@@ -7,5 +7,7 @@ void BOARDHardware::Initialize()
     this->ClockHandler.Initialize();
     this->Pins.Initialize();
     this->Terminal.Initialize();
-    this->SyncMovementController.Initialize();
+    this->MotorX.Initialize();
+    this->MotorY.Initialize();
+    // this->MotorZ.Initialize();   //FIXME add motor Z - it has other intertimer connection
 }

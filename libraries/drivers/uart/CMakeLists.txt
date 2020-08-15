@@ -1,8 +1,6 @@
 set(NAME uart)
 
 set(SOURCES
-    uart.cpp
-    inc/${NAME}/uart.hpp
 )
 
 add_library(${NAME} STATIC ${SOURCES})

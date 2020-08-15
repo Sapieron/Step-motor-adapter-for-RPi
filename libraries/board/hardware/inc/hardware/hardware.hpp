@@ -27,7 +27,7 @@
 #include "terminal/terminal.hpp"
 #include "uart/uart.hpp"
 #include "A4988/A4988.hpp"
-#include "motorController/motorController.hpp"
+#include "motorController/motor_controller.hpp"
 
 #include "base/clock.hpp"
 #include "mcu/config.hpp"
@@ -38,20 +38,42 @@
 \******************************************************************************/
 namespace board
 {
+    /**
+     * @defgroup board_hardware BOARD Hardware
+     * @ingroup board
+     * 
+     * @{
+     */
+
+    /**
+     * @brief BOARDHardware - structure containing all hardware devices
+     * 
+     */
     struct BOARDHardware final
     {
+        /** @brief Initializes board hardware  */
         void Initialize();
 
+        /** @brief Board's clock handler */
         config::clock::Clock<config::Clock> ClockHandler;
 
+        /** @brief Board pins */
         BOARDGPIO Pins;
 
+        /** @brief Terminal interface */
         drivers::uart::UART<io_map::UART_3> Terminal;
 
-        devices::motorController::MotorController<io_map::Motor_X,
-                                                  io_map::Motor_Y,
-                                                  io_map::Motor_Z> SyncMovementController;
+        /** @brief Motor X controller */
+        devices::a4988::A4988<io_map::Motor_X> MotorX;
+
+        /** @brief Motor Y controller */
+        devices::a4988::A4988<io_map::Motor_Y> MotorY;
+
+        /** @brief Motor Z controller */
+        devices::a4988::A4988<io_map::Motor_Z> MotorZ;
     };
+
+    /** @} */
 }
 
 

@@ -25,9 +25,12 @@
 #include <array>
 #include <float.h>
 #include <limits>
+#include <string>
 
 #include "hardware/gpio.hpp"
 #include "utils.hpp"
+
+#include "motorControl_io.hpp"
 
 #include "A4988/types.hpp"
 
@@ -37,12 +40,12 @@
 using std::uint32_t;
 using std::int32_t;
 
-namespace devices
+namespace devices   //FIXME that must be namespace drivers!
 {
     namespace a4988
     {
         template<typename MotorPort>
-        class A4988 final
+        class A4988 final : public IMotorControlIO
         {
         public:
 
@@ -61,26 +64,30 @@ namespace devices
             /**
              * @brief Moves stepper motor to desired coordinate
              * 
-             * @param coordinate 
+             * @param args... desired coordinate 
              */
-            void MoveToCoordinate(int32_t coordinate);
+            virtual void MoveToCoordinate(std::int32_t args...) override;
 
             /**
              * @brief Rotates stepper motor by desired number of steps
              * 
-             * @param rotations 
+             * @param args... desired number of rotations
              */
-            void Rotate(int32_t rotations);
+            virtual void Rotate(std::int32_t args...) override;
 
             /**
              * @brief Set the Current Position As Zero
              * 
              */
-            void SetCurrentPositionAsZero();
+            virtual void SetCurrentPositionAsZero() override;
+
+            /**
+             * @brief Handles interrupt
+             * 
+             */
+            void OnInterrupt();
 
         private:
-            /** @brief MSTable desrcibes MS Pins values, which will set microstepping value of A4988 */
-            static constexpr std::array<std::uint_fast8_t, 5> MSTable = {0b000, 0b001, 0b010, 0b011, 0b111};
 
             /**
              * @brief Set the Microstepping Mode object
@@ -109,13 +116,15 @@ namespace devices
             int32_t _steps_to_cruise;
             int32_t _step_pulse;
             int32_t _cruise_step_pulse;
-            static constexpr float _oneRevEqualsmm = 4;    //FIXME make it being defined in API
+            static constexpr float _oneRevEqualsmm = MotorPort::OneRevEqualsMM;
             static constexpr float _factor = (float)MotorPort::MotorStepsPerRev / (float)360;
 
             const board::MotorPins<MotorPort> _PinsControl;
 
             TIM_TypeDef *const _slaveTimer  = reinterpret_cast<TIM_TypeDef *>(MotorPort::OutputSlaveTimer);
             TIM_TypeDef *const _masterTimer = reinterpret_cast<TIM_TypeDef *>(MotorPort::MasterTimer);
+
+            bool _possibleToMove;
         };
 
         template<typename MotorPort>
@@ -124,6 +133,7 @@ namespace devices
         template<typename MotorPort>
         void A4988<MotorPort>::Initialize()
         {
+
             ClockTimerEnable(MotorPort::OutputSlaveTimer);  //FIXME move it to Timer driver
             ClockTimerEnable(MotorPort::MasterTimer);
             InitializeTimers();
@@ -132,33 +142,38 @@ namespace devices
         }
 
         template<typename MotorPort>
-        void A4988<MotorPort>::MoveToCoordinate(int32_t coordinate)
+        void A4988<MotorPort>::MoveToCoordinate(std::int32_t args...)
         {
-            float _moveBy = coordinate - _position;
+            float _moveBy = args - _position;
             _position = _position + _moveBy;
             this->Rotate(360 * (_moveBy / _oneRevEqualsmm));
         }
 
         template<typename MotorPort>
-        void A4988<MotorPort>::Rotate(int32_t rotations)
+        void A4988<MotorPort>::Rotate(std::int32_t args...)
         {
+            std::int32_t rotations = args;
             _dirState = (rotations >= 0) ? true : false;
             _PinsControl.Dir.Set(_dirState);
             _steps_to_cruise = abs(rotations * MotorPort::MotorStepsPerRev);
+            _steps_remaining = _steps_to_cruise;
 
-            while(_steps_to_cruise > 0)
+            this->_possibleToMove = true;
+
+            while(_steps_remaining > 0 && this->_possibleToMove)
             {
-                //FIXME !It needs FreeRTOS to be introduced!
-                if(_steps_to_cruise > 100)    //TODO instead of std::uint16_t define it in types
+                if(_steps_remaining > 100)    //TODO instead of std::uint16_t define it in types
                 {
-                    ExecuteRotation(100);
-                    _steps_to_cruise -= 100;
+                    _steps_remaining -= 100;
+                    _cruise_step_pulse = 100;
                 }
                 else
                 {
-                    ExecuteRotation(_steps_to_cruise);
-                    _steps_to_cruise = 0;
+                    _cruise_step_pulse = _steps_remaining;
+                    _steps_remaining = 0;
                 }
+                ExecuteRotation(this->_cruise_step_pulse);
+                this->_possibleToMove = false;
             }
         }
 
@@ -169,10 +184,30 @@ namespace devices
         }
 
         template<typename MotorPort>
+        void A4988<MotorPort>::OnInterrupt()
+        {
+            if ((_masterTimer->SR & (0b1 << TIM_SR_UIF)) == 0b1)
+            {
+                _masterTimer->SR &= ~(TIM_SR_UIF);
+            }
+
+            /* commutation update control */
+            /* Reset the OC1M bits in the CCMR1 register */
+            _slaveTimer->CCMR1 &= TIM_CCMR1_OC2M;
+            /* configure the OC1M bits in the CCMRx register to inactive mode*/
+            _slaveTimer->CCMR1 |= TIM_OCMODE_FORCED_INACTIVE;
+
+            _masterTimer->CR1 &= ~(TIM_CR1_CEN);
+            _slaveTimer->CR1  &= ~(TIM_CR1_CEN);
+
+            this->_possibleToMove = true;
+        }
+
+        template<typename MotorPort>
         void A4988<MotorPort>::SetMicrosteppingMode() const
         {
-            static_assert( MotorPort::SteppingMode < (this->MSTable.size()) );
-            auto mask = A4988::MSTable[MotorPort::SteppingMode];
+            static_assert( MotorPort::SteppingMode < MSTable.size() );
+            auto mask = MSTable[MotorPort::SteppingMode];
             _PinsControl.Ms1.Set(mask & 0b001);
             _PinsControl.Ms2.Set(mask & 0b010);
             _PinsControl.Ms3.Set(mask & 0b100);
@@ -181,8 +216,6 @@ namespace devices
         template <typename MotorPort>
         void A4988<MotorPort>::InitializeTimers()
         {
-
-
             HAL_NVIC_SetPriority(MotorPort::MasterTimerIRQn, 0, 0);
             HAL_NVIC_EnableIRQ(MotorPort::MasterTimerIRQn);
 
@@ -305,23 +338,30 @@ namespace devices
             _slaveTimer->CR1 |= TIM_CR1_CEN;
         }
 
-        template <typename MotorPort>
+        template<typename MotorPort>
         void A4988<MotorPort>::ExecuteRotation(int32_t stepsToCruise)
         {
-            //1. setup timer registers
-            auto pulses = stepsToCruise;
+            if (this->_possibleToMove)
+            {
+                //1. setup timer registers
+                auto pulses = stepsToCruise;
 
-            auto desiredFrequencySlaveTimer = MotorPort::Frequency;
-            auto desiredMasterClockClock = 100_kHz;
-            auto desiredFrequencyMasterClock = desiredFrequencySlaveTimer;
-            auto periodMasterClock = (uint16_t)(desiredMasterClockClock / desiredFrequencyMasterClock * pulses) - 1;
+                auto desiredFrequencySlaveTimer = MotorPort::Frequency;
+                auto desiredMasterClockClock = 100_kHz;
+                auto desiredFrequencyMasterClock = desiredFrequencySlaveTimer;
+                auto periodMasterClock = (uint16_t)(desiredMasterClockClock / desiredFrequencyMasterClock * pulses) - 1;
 
-            _masterTimer->CNT = 0;
-            _slaveTimer->CNT = 0;
-            _masterTimer->ARR = periodMasterClock;
+                _masterTimer->CNT = 0;
+                _slaveTimer->CNT = 0;
+                _masterTimer->ARR = periodMasterClock;
 
-            //2. force the movement!
-            _slaveTimer->CCMR1 |= TIM_OCMODE_PWM1;
+                /* Enable the both timers counters */
+                _masterTimer->CR1 |= TIM_CR1_CEN;
+                _slaveTimer->CR1 |= TIM_CR1_CEN;
+
+                //2. force the movement!
+                _slaveTimer->CCMR1 |= TIM_OCMODE_PWM1;
+            }
         }
 
         template <typename MotorPort>
@@ -416,6 +456,9 @@ namespace devices
         }
     } // namespace A4988
 } // namespace drivers
+
+
+
 
 /******************************************************************************\
  *                             End of file

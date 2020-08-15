@@ -27,6 +27,27 @@
 \******************************************************************************/
 namespace config
 {
+    /**
+     * @defgroup clock_config Clock configuration
+     * @ingroup board_configuration
+     */
+
+    /**
+     * @brief Clock structure - contains clock configuration for target mcu
+     * 
+     * @remark Frequencies set:
+     * @param  HCLK to AHB bus, core, memory and DMA - 64MHz
+     * @param  To cortex system timer   - 64MHz
+     * @param  FCLK                     - 64MHz
+     * @param  APB1 peripheral clocks   - 32MHz
+     * @param  APB1 timer clocks        - 64MHz
+     * @param  APB2 peripheral clocks   - 64MHz
+     * @param  APB2 timer clocks        - 64MHz
+     * @param  HCLK                     - 64MHz
+     * @param  SYSCLK                   - 64MHz
+     * 
+     * @param  HSI clock                - 8MHz
+     */
     struct Clock
     {
         static constexpr std::uint32_t OscillatorType   = RCC_OSCILLATORTYPE_HSI;

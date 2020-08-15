@@ -20,13 +20,13 @@
 #pragma once
 
 /******************************************************************************\
- * 								Includes
+ *                             Includes
 \******************************************************************************/
 /* Standard Library includes*/
 #include <cstdint>
 
 /******************************************************************************\
- * 								 CODE
+ *                              Code
 \******************************************************************************/
 
 /**
@@ -34,7 +34,7 @@
  * @param value - value to be converted
  * @return value in Hz
  */
-constexpr std::uint32_t operator"" _Hz(unsigned long long int value)
+constexpr std::uint64_t operator"" _Hz(std::uint64_t value)
 {
     return value;
 }
@@ -44,7 +44,7 @@ constexpr std::uint32_t operator"" _Hz(unsigned long long int value)
  * @param value - value to be converted
  * @return value in kHz
  */
-constexpr std::uint32_t operator"" _kHz(unsigned long long int value)
+constexpr std::uint64_t operator"" _kHz(std::uint64_t value)
 {
     return value * 1000_Hz;
 }
@@ -54,7 +54,7 @@ constexpr std::uint32_t operator"" _kHz(unsigned long long int value)
  * @param value - value to be converted
  * @return value in MHz
  */
-constexpr std::uint32_t operator"" _MHz(unsigned long long int value)
+constexpr std::uint64_t operator"" _MHz(std::uint64_t value)
 {
     return value * 1000_kHz;
 }
@@ -64,7 +64,7 @@ constexpr std::uint32_t operator"" _MHz(unsigned long long int value)
  * @param value - value to be converted
  * @return value in microseconds
  */
-constexpr std::uint32_t operator"" _us(unsigned long long int value)
+constexpr std::uint64_t operator"" _us(std::uint64_t value)
 {
     return value;
 }
@@ -74,7 +74,7 @@ constexpr std::uint32_t operator"" _us(unsigned long long int value)
  * @param value - value to be converted
  * @return value in rpm
  */
-constexpr std::uint32_t operator"" _rpm(unsigned long long int value)
+constexpr std::uint64_t operator"" _rpm(std::uint64_t value)
 {
     return value;
 }
@@ -85,9 +85,34 @@ constexpr std::uint32_t operator"" _rpm(unsigned long long int value)
  * @param value 
  * @return constexpr std::uint32_t 
  */
-constexpr std::uint32_t operator""_percent(uint64_t value)
+constexpr std::uint32_t operator""_percent(std::uint64_t value)
 {
     return value;
 }
 
+/**
+ * @brief Marker - indicates value is in bytes
+ * 
+ * @param value 
+ * @return value in bytes
+ */
+constexpr std::uint32_t operator""_B(std::uint64_t value)
+{
+    return value;
+}
+
+/**
+ * @brief Marker - indicates value is in kilobytes
+ * 
+ * @param value 
+ * @return value in kilobytes 
+ */
+constexpr std::uint32_t operator""_kB(std::uint64_t value)
+{
+    return value * 1024_B;
+}
+
+/******************************************************************************\
+ *                            End of file
+\******************************************************************************/
 #endif /* BASE_UTILS_HPP */

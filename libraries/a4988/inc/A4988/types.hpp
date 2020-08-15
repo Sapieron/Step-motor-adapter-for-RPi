@@ -42,6 +42,9 @@ namespace devices
          * @ingroup a4988_driver
          */
 
+        /** @brief _msTable desrcibes MS Pins values, which will set microstepping value of A4988 */
+        static constexpr std::array<std::uint_fast8_t, 5U> MSTable = {0b000, 0b001, 0b010, 0b011, 0b111};
+
         /**
          * @brief Master-slave timer configuration for specified SlaveTimer
          * 
