@@ -1,7 +1,8 @@
 /**
- * @file MotorController.hpp
+ * @file motor_controller.hpp
  * @author Pawel Klisz (pawelochojec@gmail.com)
- * @brief 
+ * @brief Provides common class for controlling variadic number of stepper motors,
+ * with possibility to use different hardware driver if desired
  * @version 0.1
  * @date 2020-04-25
  * 
@@ -14,6 +15,8 @@
  * 
  */
 
+#ifndef MOTOR_CONTROLLER_HPP
+#define MOTOR_CONTROLLER_HPP
 
 /******************************************************************************\
  *                            Includes
@@ -59,23 +62,23 @@ namespace devices
                             IMotorControlIO& MotorZ);
 
             /**
-             * @brief Moves various motors to desired coordinate
+             * @brief Moves variadic number of motors to desired coordinate
              * 
-             * @param args Each argument tells how much should each axis be
-             * moved, f.e. passing arguments (1,2,3) will make axis' X, Y and Z
+             * @param rotations Each argument tells how much should each axis be
+             * moved, f.e. passing vector = {1,2,3} will make axis' X, Y and Z
              * move X by 1mm, Y by 2mm and Z by 3mm
              */
-            void MoveToCoordinate(int32_t args...) override;
+            void MoveToCoordinate(std::vector<float> coordinates) override;
 
             /**
-             * @brief 
+             * @brief Forces rotatios of variadic number of motor
              * 
-             * @param args Each argument tells how many rotations should each
-             * motor do, f.e. passing arguments (1,2,3) will make motors X, Y
+             * @param rotations Each argument tells how many rotations should each
+             * motor do, f.e. passing vector = {1,2,3} will make motors X, Y
              * and Z move respectively X by 1 rotation, Y by 2 rotations and
              * Z by 3 rotations
              */
-            void Rotate(int32_t args...) override;
+            void Rotate(std::vector<float> rotations) override;
 
             /**
              * @brief Sets current position of all axis' to 0
@@ -95,7 +98,7 @@ namespace devices
              * @brief _MotorX private class member, provides control over
              * connected stepper
              */
-            IMotorControlIO& _MotorX;
+            IMotorControlIO& _MotorX;   //TODO make it of type vector
 
             /**
              * @brief _MotorY private class member, provides control over
@@ -109,9 +112,7 @@ namespace devices
              */
             IMotorControlIO& _MotorZ;
         };
-
         /** @} */
-        
     } // namespace MotorController
     
 } // namespace devices
@@ -120,3 +121,4 @@ namespace devices
 /******************************************************************************\
  *                            End of file
 \******************************************************************************/
+#endif /* MOTOR_CONTROLLER_HPP */

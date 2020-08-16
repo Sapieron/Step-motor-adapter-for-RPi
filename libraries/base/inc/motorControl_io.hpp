@@ -19,22 +19,57 @@
 
 #pragma once
 
+/******************************************************************************\
+ *                                 Includes
+\******************************************************************************/
 #include <cstdint>
 #include <cstdarg>
 
+
+/******************************************************************************\
+ *                                  Code
+\******************************************************************************/
+/**
+ * @brief API for MotorControl interface
+ * 
+ */
 class IMotorControlIO
 {
-
 public:
+    /**
+     * @brief Default ctor
+     * 
+     */
     IMotorControlIO() = default;
+
+    /**
+     * @brief Default destructor
+     * 
+     */
     ~IMotorControlIO() = default;
 
-    virtual void MoveToCoordinate(std::int32_t args...) = 0;
+    /**
+     * @brief Function that moves motor to given coordinate
+     * 
+     * @param coordinate coordinate to move to
+     */
+    virtual void MoveToCoordinate(std::vector<float> coordinate) = 0;
 
-    virtual void Rotate(std::int32_t args...) = 0;
+    /**
+     * @brief Function that rotates motor by given rotations
+     * 
+     * @param rotations rotations to do
+     */
+    virtual void Rotate(std::vector<float> rotations) = 0;
 
+    /**
+     * @brief Sets current position of motor to be treated as 0
+     * 
+     */
     virtual void SetCurrentPositionAsZero() = 0;
 };
 
-
+/******************************************************************************\
+ *                                 End of file
+\******************************************************************************/
 #endif /* MOTORCONTROL_IO_BASE_HPP */

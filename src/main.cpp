@@ -19,19 +19,18 @@
 \******************************************************************************/
 /* Standard library includes */
 #include <cstdint>
-#include <cstring>
 
 /* Hardware Abstraction Layer includes */
-#include "stm32f1xx.h"
-#include "stm32f1xx_hal.h"
-#include "system_stm32f1xx.h"
+#include "TargetsDefines.hpp"
 
 /* General includes */
-#include "gpio/forward.hpp"
 #include "mcu/board.hpp"
 #include "mcu/stm32f1xx_it.h"
 #include "utils.hpp"
 #include "board_access.hpp"
+
+/* FreeRTOS includes */
+#include "cmsis_os.h"
 
 /******************************************************************************\
  *                               Global defines
@@ -39,17 +38,29 @@
 /** @brief Instance of Board. Delivers access to peripherals */
 BOARD Main;
 
-
 /******************************************************************************\
  *                              Main application
 \******************************************************************************/
+
+/**
+ * @brief Main function, that gets called after default initialization
+ * 
+ * @return int 
+ */
 int main(void)
 {
     HAL_Init();
+
     Main.Hardware.Initialize();
 
+    osKernelInitialize();
+
+    osKernelStart();
+
+    /* After kernel start following code should not be executed */
     while (1)
     {
+        HardFault_Handler();
     }
 }
 
@@ -61,7 +72,7 @@ int main(void)
 extern "C" void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     UNUSED(huart);
-    Main.Hardware.Pins.LedCommOk.High();
+    Main.Hardware.Pins.LedCommOk.Low();
     Main.motorController.OnReception(GetTerminal().GetRxBuffer());
     Main.Hardware.Terminal.CallbackHandler();
 }
@@ -70,7 +81,7 @@ extern "C" void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 extern "C" void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
 {
     UNUSED(huart);
-    Main.Hardware.Pins.LedCommOk.Low();
+    Main.Hardware.Pins.LedCommOk.High();
 }
 
 
@@ -96,20 +107,6 @@ extern "C" __attribute__((optimize("O3"))) void DMA1_Channel2_IRQHandler(void)
 }
 
 
-
-extern "C" __attribute__((optimize("O3"))) void TIM4_IRQHandler(void)
-{
-    Main.Hardware.MotorX.OnInterrupt();
-}
-
-extern "C" __attribute__((optimize("O3"))) void TIM2_IRQHandler(void)
-{
-    Main.Hardware.MotorY.OnInterrupt();
-}
-
-
-
-// extern "C" __attribute__((optimize("03"))) void TIM5_IRQHandler(void)
-// {
-//         // Main.Hardware.MotorZ.OnInterrupt(); //TODO make this handling work
-// }
+/******************************************************************************\
+ *                              End of file
+\******************************************************************************/

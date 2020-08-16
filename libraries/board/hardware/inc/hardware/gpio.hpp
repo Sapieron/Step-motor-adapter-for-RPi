@@ -37,7 +37,11 @@ namespace board
      * @{
      */
 
-    /** @brief Structure describing UART pins */
+    /**
+     * @brief Structure describing UART pins
+     * 
+     * @tparam Location 
+     */
     template <typename Location> struct UARTPins
     {
         /** @brief TX */
@@ -52,22 +56,29 @@ namespace board
         }
     };
 
+    /**
+     * @brief Structure describing MotorPins
+     * 
+     * @tparam Location 
+     */
     template <typename Location> struct MotorPins
     {
-        struct Options
-        {
-            static constexpr auto Mode = GPIO_MODE_AF_PP;
-            static constexpr auto Pull = GPIO_PULLDOWN;
-            static constexpr auto Speed = GPIO_SPEED_FREQ_HIGH;
-        };
-
+        /** @brief Dir pin */
         const drivers::gpio::OutputPin<typename Location::Dir>      Dir;
-        const drivers::gpio::OutputPin<typename Location::Ms1>      Ms1;
-        const drivers::gpio::OutputPin<typename Location::Ms2>      Ms2;
-        const drivers::gpio::OutputPin<typename Location::Ms3>      Ms3;
-        const drivers::gpio::CustomPin<typename Location::Step,
-                                                Options>            Step;
 
+        /** @brief Ms1 pin */
+        const drivers::gpio::OutputPin<typename Location::Ms1>      Ms1;
+
+        /** @brief Ms2 pin */
+        const drivers::gpio::OutputPin<typename Location::Ms2>      Ms2;
+
+        /** @brief Ms3 pin */
+        const drivers::gpio::OutputPin<typename Location::Ms3>      Ms3;
+
+        /** @brief Step pin */
+        const drivers::gpio::OutputPin<typename Location::Step>     Step;
+
+        /** @brief Initializes pins MotorPins */
         void Initialize() const
         {
             this->Dir.Initialize();

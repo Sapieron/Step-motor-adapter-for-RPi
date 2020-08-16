@@ -31,6 +31,15 @@ TIM_HandleTypeDef        htim6;
 /* Private functions ---------------------------------------------------------*/
 
 /**
+ * @brief IRQ handler for TIM6
+ * 
+ */
+void TIM6_IRQHandler(void)
+{
+    HAL_TIM_IRQHandler(&htim6);
+}
+
+/**
   * @brief  This function configures the TIM6 as a time base source. 
   *         The time source is configured  to have 1ms time base with a dedicated 
   *         Tick interrupt priority. 
@@ -53,7 +62,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   HAL_NVIC_EnableIRQ(TIM6_IRQn); 
   
   /* Enable TIM6 clock */
-  __HAL_RCC_TIM4_CLK_ENABLE();
+  __HAL_RCC_TIM6_CLK_ENABLE();
   
   /* Get clock configuration */
   HAL_RCC_GetClockConfig(&clkconfig, &pFLatency);
@@ -109,6 +118,19 @@ void HAL_ResumeTick(void)
 {
   /* Enable TIM6 Update interrupt */
   __HAL_TIM_ENABLE_IT(&htim6, TIM_IT_UPDATE);
+}
+
+/**
+ * @brief Callback to increase HAL tick
+ * 
+ * @param htim 
+ */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    if(htim->Instance == TIM6)
+    {
+        HAL_IncTick();
+    }
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -9,5 +9,5 @@ void BOARDHardware::Initialize()
     this->Terminal.Initialize();
     this->MotorX.Initialize();
     this->MotorY.Initialize();
-    // this->MotorZ.Initialize();   //FIXME add motor Z - it has other intertimer connection
+    this->MotorZ.Initialize();
 }

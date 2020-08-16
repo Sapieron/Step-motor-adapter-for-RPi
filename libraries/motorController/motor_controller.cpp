@@ -1,6 +1,7 @@
 #include "motor_controller.hpp"
 
 #include <cstdarg>
+#include <vector>
 
 using devices::motorController::MotorController;
 
@@ -14,68 +15,30 @@ MotorController::MotorController(IMotorControlIO& MotorX,
 
 
 
-void MotorController::MoveToCoordinate(std::int32_t args...)
+void MotorController::MoveToCoordinate(std::vector<float> coordinates)
 {
-    va_list list;
-    va_start(list, args);
+    std::vector<float> X;   //FIXME refactor to use varaidic number of motors
+    std::vector<float> Y;
+    std::vector<float> Z;
 
-    std::int32_t i = args;
-
-    std::int32_t X = 0;
-    std::int32_t Y = 0;
-    std::int32_t Z = 0;
-
-    while (i--)
-    {
-        if(i == 2)
-        {
-            X = va_arg(list, std::int32_t);
-        }
-        if(i == 1)
-        {
-            Y = va_arg(list, std::int32_t);
-        }
-        if(i == 0)
-        {
-            Z = va_arg(list, std::int32_t);
-        }
-        ++args;
-    }
-    va_end(list);
+    X.push_back(coordinates.at(0));
+    Y.push_back(coordinates.at(1));
+    Z.push_back(coordinates.at(2));
 
     this->_MotorX.MoveToCoordinate(X);
     this->_MotorY.MoveToCoordinate(Y);
     this->_MotorZ.MoveToCoordinate(Z);
 }
 
-void MotorController::Rotate(std::int32_t args...)
+void MotorController::Rotate(std::vector<float> rotations)
 {
-    va_list list;
-    va_start(list, args);
+    std::vector<float> X;   //FIXME refactor to use varaidic number of motors
+    std::vector<float> Y;
+    std::vector<float> Z;
 
-    std::int32_t i = args;
-
-    std::int32_t X = 0;
-    std::int32_t Y = 0;
-    std::int32_t Z = 0;
-
-    while (i--)
-    {
-        if(i == 2)
-        {
-            X = va_arg(list, std::int32_t);
-        }
-        if(i == 1)
-        {
-            Y = va_arg(list, std::int32_t);
-        }
-        if(i == 0)
-        {
-            Z = va_arg(list, std::int32_t);
-        }
-        ++args;
-    }
-    va_end(list);
+    X.push_back(rotations.at(0));
+    Y.push_back(rotations.at(1));
+    Z.push_back(rotations.at(2));
 
     this->_MotorX.Rotate(X);
     this->_MotorY.Rotate(Y);
@@ -98,15 +61,15 @@ void MotorController::OnReception(const char* data)
     std::int32_t Y = 0;
     std::int32_t Z = 0;
 
+    std::vector<float> coordinates;
+    std::vector<float> rotations;
+
     switch (_cmd)
     {
     case MotorControllerCmd::SayHelloWorld:
         //TODO
         break;
     case MotorControllerCmd::MoveToCoordinate:
-        //TODO
-        break;
-    case MotorControllerCmd::RotateStepper:
         X += 1000 * static_cast<std::int32_t>(data[3]  - 0x30);
         X += 100 *  static_cast<std::int32_t>(data[4]  - 0x30);
         X += 10 *   static_cast<std::int32_t>(data[5]  - 0x30);
@@ -115,6 +78,7 @@ void MotorController::OnReception(const char* data)
         {
             X = -X;
         }
+        coordinates.push_back( static_cast<float>(X) );
 
         Y += 1000 * static_cast<std::int32_t>(data[9]  - 0x30);
         Y += 100 *  static_cast<std::int32_t>(data[10] - 0x30);
@@ -124,6 +88,7 @@ void MotorController::OnReception(const char* data)
         {
             Y = -Y;
         }
+        coordinates.push_back( static_cast<float>(Y) );
 
         Z += 1000 * static_cast<std::int32_t>(data[15] - 0x30);
         Z += 100 *  static_cast<std::int32_t>(data[16] - 0x30);
@@ -133,8 +98,45 @@ void MotorController::OnReception(const char* data)
         {
             Z = -Z;
         }
-        this->Rotate(3U, X, Y, Z);  //FIXME instead of 3 make it calculate number of arguments
+        coordinates.push_back( static_cast<float>(Z) );
+
+        this->MoveToCoordinate(coordinates);  //FIXME instead of 3 make it calculate number of arguments
         break;
+
+    case MotorControllerCmd::RotateStepper:
+        X += 1000 * static_cast<std::int32_t>(data[3]  - 0x30);
+        X += 100 *  static_cast<std::int32_t>(data[4]  - 0x30);
+        X += 10 *   static_cast<std::int32_t>(data[5]  - 0x30);
+        X +=        static_cast<std::int32_t>(data[6]  - 0x30);
+        if (data[2] == '-')
+        {
+            X = -X;
+        }
+        rotations.push_back( static_cast<float>(X) );
+
+        Y += 1000 * static_cast<std::int32_t>(data[9]  - 0x30);
+        Y += 100 *  static_cast<std::int32_t>(data[10] - 0x30);
+        Y += 10 *   static_cast<std::int32_t>(data[11] - 0x30);
+        Y +=        static_cast<std::int32_t>(data[12] - 0x30);
+        if (data[8] == '-')
+        {
+            Y = -Y;
+        }
+        rotations.push_back( static_cast<float>(Y) );
+
+        Z += 1000 * static_cast<std::int32_t>(data[15] - 0x30);
+        Z += 100 *  static_cast<std::int32_t>(data[16] - 0x30);
+        Z += 10 *   static_cast<std::int32_t>(data[17] - 0x30);
+        Z +=        static_cast<std::int32_t>(data[18] - 0x30);
+        if (data[14] == '-')
+        {
+            Z = -Z;
+        }
+        rotations.push_back( static_cast<float>(Z) );
+
+        this->Rotate(rotations);
+        break;
+
     case MotorControllerCmd::SetCurrentPositionAsZero:
         //TODO
         break;
