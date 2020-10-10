@@ -28,18 +28,13 @@
  *                               Code
 \******************************************************************************/
 
-namespace devices
+namespace drivers
 {
     namespace a4988
     {
         /**
-         * @defgroup a4988_driver A4988 Driver
-         * @ingroup BSP
-         */
-
-        /**
-         * @brief a4988_driver
-         * @ingroup a4988_driver
+         * @addtogroup a4988_driver
+         * @{
          */
 
         /** @brief _msTable desrcibes MS Pins values, which will set microstepping value of A4988 */
@@ -91,10 +86,11 @@ namespace devices
             static constexpr auto slaveTimerITR = TIM_TS_ITR1;
             static constexpr auto masterTimerITR = TIM_TS_ITR0; //FIXME it's dummy, doesn't meet table
         };
+        /** @} */
 
     } // namespace a4988
     
-} // namespace devices
+} // namespace drivers
 
 
 /******************************************************************************\

@@ -20,7 +20,7 @@
 #pragma once
 
 /******************************************************************************\
- * 								Includes
+ *                            Includes
 \******************************************************************************/
 #include "TargetsDefines.hpp"
 
@@ -30,7 +30,7 @@
 #include <cstring>
 
 /******************************************************************************\
- * 							      CODE
+ *                             CODE
 \******************************************************************************/
 namespace drivers
 {
@@ -38,12 +38,15 @@ namespace drivers
     {
         /**
          * @defgroup uart_driver UART Driver
-         * @ingroup peripheral_driver
+         * @ingroup peripheral_drivers
+         * 
+         * @{
          */
 
         /**
-         * @brief UART driver
-         * @ingroup uart_driver
+         * @brief Class describing UART driver
+         * 
+         * @tparam UartPort 
          */
         template<typename UartPort>
         class UART final : public ILineIO
@@ -57,8 +60,6 @@ namespace drivers
 
             /** @brief Call from  */
             void OnReception();
-
-            // void Read();
 
             /** @brief Outputs given string to connected UART peripheral */
             virtual void Puts(const char* text) override;
@@ -76,17 +77,26 @@ namespace drivers
             void CallbackHandler();
 
         private:
+            /** @brief Private handler */
             UART_HandleTypeDef  _huart;
 
+            /** @brief Private DMA handler for uart rx */
             DMA_HandleTypeDef   _hdma_huart_rx;
+
+            /** @brief Private DMA handler for uart Tx */
             DMA_HandleTypeDef   _hdma_huart_tx;
 
+            /** @brief Initializes DMA */
             void InitializeDma();
 
+            /** @brief Enables uart clock */
             void ClockUartEnable() const;
 
+            /** @brief Buffer */
             std::uint8_t _rxBuffer[21];
         };
+
+        /** @} */
 
         template<typename UartPort> UART<UartPort>::UART(){}
 
@@ -214,5 +224,7 @@ namespace drivers
     } // namespace uart
 } // namespace drivers
 
-
+/******************************************************************************\
+ *                          End of file
+\******************************************************************************/
 #endif /* UART_DRIVER_HPP */

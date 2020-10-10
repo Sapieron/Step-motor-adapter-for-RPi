@@ -46,7 +46,7 @@ namespace board
      */
 
     /**
-     * @brief BOARDHardware - structure containing all hardware devices
+     * @brief BOARDHardware - structure containing all hardware drivers
      * 
      */
     struct BOARDHardware final
@@ -64,13 +64,13 @@ namespace board
         drivers::uart::UART<io_map::UART_3> Terminal;
 
         /** @brief Motor X controller */
-        devices::a4988::A4988<io_map::Motor_X> MotorX;
+        drivers::a4988::A4988<io_map::Motor_X> MotorX;
 
         /** @brief Motor Y controller */
-        devices::a4988::A4988<io_map::Motor_Y> MotorY;
+        drivers::a4988::A4988<io_map::Motor_Y> MotorY;
 
         /** @brief Motor Z controller */
-        devices::a4988::A4988<io_map::Motor_Z> MotorZ;
+        drivers::a4988::A4988<io_map::Motor_Z> MotorZ;
     };
 
     /** @} */
