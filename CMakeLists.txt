@@ -9,6 +9,8 @@ option(ENABLE_LTO "Use link time optimization" OFF)
 
 set(ENABLE_COVERAGE FALSE CACHE BOOL "Enable code coverage")
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON )
+
 set(MEM_MANAGMENT_TYPE 1)
 
 set(TARGET_MCU_PLATFORM "EngModel" CACHE STRING "Target mcu platform")

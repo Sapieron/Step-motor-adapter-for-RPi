@@ -44,13 +44,15 @@
 using std::uint32_t;
 using std::int32_t;
 
-namespace devices   //FIXME that must be namespace drivers!
+namespace drivers
 {
     namespace a4988
     {
         /**
          * @defgroup a4988_driver A4988 Driver
-         * @ingroup bsp
+         * A4988 step motor driver
+         * 
+         * @ingroup device_drivers
          * 
          * @{
          */
@@ -131,7 +133,6 @@ namespace devices   //FIXME that must be namespace drivers!
             int32_t _stepsToCruise = 0;
         };
 
-        /** @} */
 
         template<typename MotorPort>
         A4988<MotorPort>::A4988() : _position(0){}
@@ -209,6 +210,8 @@ namespace devices   //FIXME that must be namespace drivers!
                 }
             }
         }
+
+        /** @} */
     } // namespace A4988
 } // namespace drivers
 

@@ -1,9 +1,9 @@
 set(NAME gpio)
 
 set(SOURCES
-    driver.cpp
+    ${NAME}.cpp
     inc/${NAME}/forward.hpp
-    inc/${NAME}/driver.hpp
+    inc/${NAME}/${NAME}.hpp
 )
 
 add_library(${NAME} STATIC ${SOURCES})

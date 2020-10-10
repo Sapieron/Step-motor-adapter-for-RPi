@@ -23,7 +23,7 @@
 #include "TargetsDefines.hpp"
 
 #include "gpio/forward.hpp"
-#include "gpio/driver.hpp"
+#include "gpio/gpio.hpp"
 
 #include "mcu/io_map.hpp"
 #include "gpio_internal.hpp"

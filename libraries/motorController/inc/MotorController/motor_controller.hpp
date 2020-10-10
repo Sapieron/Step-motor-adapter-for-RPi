@@ -38,7 +38,9 @@ namespace devices
 
         /**
          * @defgroup motor_controller Motor Controller
-         * @ingroup devices
+         * This group provides common API for motor control
+         * 
+         * @ingroup device_drivers
          * 
          * @{
          */

@@ -132,5 +132,10 @@
         "For full license please refer to LICENSE.txt",
         "",
         "This project can be found on https://github.com/Sapieron/Step-motor-adapter-for-RPi"
-    ]
+    ],
+
+    "sourcetrail.ip": "localhost",
+    "sourcetrail.sourcetrailPort": 6667,
+    "sourcetrail.pluginPort": 6666,
+    "sourcetrail.startServerAtStartup": true
 }
