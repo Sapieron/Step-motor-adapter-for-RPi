@@ -75,7 +75,7 @@ namespace io_map
     {
         struct Group
         {
-            /* @brief UART Pins container */
+            /** @brief UART Pins container */
             using Pins = PinContainer< typename Self::RX, typename Self::TX >;
         };
     };
@@ -95,6 +95,21 @@ namespace io_map
                                         typename Self::Ms2,
                                         typename Self::Ms3,
                                         typename Self::Step>;
+        };
+    };
+
+    /**
+     * @brief Base type for describing water sensor pin location
+     * 
+     * @tparam Self - typename of pin
+     */
+    template <typename Self>
+    struct DigitalSensorPins : public PinGroupTag
+    {
+        struct Group
+        {
+            /** @brief DigitalSensorPins container */
+            using Pins = PinContainer<typename Self::SIG>;
         };
     };
 

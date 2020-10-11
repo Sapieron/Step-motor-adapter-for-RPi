@@ -122,6 +122,13 @@ namespace io_map
         using TX = PinLocation<GPIOB_BASE, GPIO_PIN_10>;
         using RX = PinLocation<GPIOB_BASE, GPIO_PIN_11>;
     };
+
+    struct WaterSensor_1 : public DigitalSensorPins<WaterSensor_1>
+    {
+        static constexpr IRQn_Type Interrupt = IRQn_Type::EXTI9_5_IRQn;
+
+        using SIG = PinLocation<GPIOA_BASE, GPIO_PIN_5>;
+    };
 }
 
 #endif /* ENG_MODEL_MCU_IO_MAP_HPP */

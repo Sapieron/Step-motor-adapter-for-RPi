@@ -85,6 +85,14 @@ extern "C" void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
 }
 
 
+extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    //TODO To be implemented when water pump controller is introduced
+    //TODO could be done that callback is specific to sensor, check HAL_EXTI_RegisterCallback
+    UNUSED(GPIO_Pin);
+}
+
+
 /******************************************************************************\
  *                               IRQ Handlers
 \******************************************************************************/
@@ -104,6 +112,15 @@ extern "C" __attribute__((optimize("O3"))) void DMA1_Channel3_IRQHandler(void)
 extern "C" __attribute__((optimize("O3"))) void DMA1_Channel2_IRQHandler(void)
 {
     Main.Hardware.Terminal.OnDmaTransmit();
+}
+
+extern "C" __attribute__((optimize("O3"))) void EXTI9_5_IRQHandler(void)
+{
+    /** Note: No need to check if correct EXTI line was called,
+     * as this sensor is only one connected to this EXTI controller.
+     * Also, OnInterrupt does internal checking if correct line was called.
+     */
+    Main.Hardware.WaterSensor1.OnInterrupt();
 }
 
 

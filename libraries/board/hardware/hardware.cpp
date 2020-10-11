@@ -10,4 +10,5 @@ void BOARDHardware::Initialize()
     this->MotorX.Initialize();
     this->MotorY.Initialize();
     this->MotorZ.Initialize();
+    this->WaterSensor1.Initialize(); //FIXME call Water pump controller to handle it
 }
