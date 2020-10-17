@@ -28,6 +28,7 @@
 #include "uart/uart.hpp"
 #include "A4988/A4988.hpp"
 #include "motorController/motor_controller.hpp"
+#include "FS-IR02/FS-IR02.hpp"
 
 #include "base/clock.hpp"
 #include "mcu/config.hpp"
@@ -71,6 +72,9 @@ namespace board
 
         /** @brief Motor Z controller */
         drivers::a4988::A4988<io_map::Motor_Z> MotorZ;
+
+        /** @brief Water sensor controller *///FIXME temporary, should be done within waterpump controller
+        drivers::fs_ir02::FS_IR02<io_map::WaterSensor_1> WaterSensor1;
     };
 
     /** @} */

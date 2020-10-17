@@ -89,6 +89,27 @@ namespace board
         }
     };
 
+    template <typename Location>
+    struct DigitalSensorPins
+    {
+        struct Options
+        {
+            static constexpr auto Mode  = GPIO_MODE_IT_RISING_FALLING;   //FIXME interrupt or event? event should be menaged by os, am I right?
+            static constexpr auto Pull  = GPIO_NOPULL;
+            static constexpr auto Speed = GPIO_SPEED_FREQ_LOW;
+        };
+
+        /** @brief SIG pin */
+        const drivers::gpio::CustomPin<typename Location::SIG,
+                                                Options> SIG;
+
+        /** @brief Initializes digital sensor pins */
+        void Initialize() const
+        {
+            this->SIG.Initialize();
+        }
+    };
+
     /**
      * @brief Composes all used GPIO pins together
      *
@@ -98,7 +119,8 @@ namespace board
               typename TUART3,
               typename TMotor_X,
               typename TMotor_Y,
-              typename TMotor_Z>
+              typename TMotor_Z,
+              typename TWaterSensor_1>
     struct BoardGPIOBase
     {
         /** @brief LedCommOk onboard green led */
@@ -116,12 +138,16 @@ namespace board
         /** @brief Motor 3*/
         const MotorPins<TMotor_Z> Motor_Z;
 
+        /** @brief Water Sensor 1 */
+        const DigitalSensorPins<TWaterSensor_1> WaterSensor_1;
+
         /** @brief Initializes GPIO pins */
         void Initialize() const
         {
             this->LedCommOk.Initialize();
             this->UART_3.Initialize();
             this->Motor_Y.Initialize();
+            this->WaterSensor_1.Initialize();
 
         #ifndef DEVBOARD
             this->Motor_X.Initialize();
@@ -136,7 +162,8 @@ namespace board
                                                  io_map::UART_3,
                                                  io_map::Motor_X,
                                                  io_map::Motor_Y,
-                                                 io_map::Motor_Z>;
+                                                 io_map::Motor_Z,
+                                                 io_map::WaterSensor_1>;
 
     /** @} */
 }
